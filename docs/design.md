@@ -40,8 +40,9 @@ type DiceCommand = 'CC' | 'CCB'
 type ResultType = 'critical' | 'special' | 'success' | 'failure' | 'fumble'
 
 // 正規化マッピング
-// CC:  イクストリーム成功 → critical
-//      ハード成功         → special
+// CC:  クリティカル → critical
+//      イクストリーム成功 → special
+//      ハード成功         → hardSuccess (オプション、必要に応じて追加)
 //      レギュラー成功     → success
 //      失敗               → failure
 //      ファンブル         → fumble

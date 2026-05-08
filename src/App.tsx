@@ -1,20 +1,22 @@
-interface DiceRollResult {
-  charName: string
-  result: Results
-}
+import { parserLog } from "./parser"
 
-type Results = {
-  critical: number
-  special: number
-  success: number
-  failure: number
-  fumble: number
-}
+export default function App () {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return 
 
-export default function App (results: DiceRollResult[]) {
+    const reader = new FileReader()
+    reader.onload = (event) => {
+      const html = event.target?.result as string
+      const entries = parserLog(html)
+      console.log(entries)
+    }
+    reader.readAsText(file)
+  }
+
   return (
     <div>
-      app
+      <input type="file" onChange={handleFileChange} />
     </div>
   )
 }
