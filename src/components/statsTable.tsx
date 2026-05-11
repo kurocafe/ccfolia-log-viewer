@@ -1,44 +1,124 @@
-import type { CharacterStats } from "../types";
+import type { CharacterStats, ResultType } from "../types"
 
 interface Props {
   stats: CharacterStats[]
 }
 
+const RESULT_CONFIG: Record<ResultType, { label: string; color: string; bg: string }> = {
+  critical:    { label: "クリティカル", color: "#fbbf24", bg: "rgba(251,191,36,0.12)" },
+  special:     { label: "スペシャル",   color: "#a78bfa", bg: "rgba(167,139,250,0.12)" },
+  hardSuccess: { label: "ハード成功", color: "#60a5fa", bg: "rgba(96,165,250,0.12)" },
+  success:     { label: "成功",   color: "#34d399", bg: "rgba(52,211,153,0.12)" },
+  failure:     { label: "失敗",   color: "#6b7280", bg: "rgba(107,114,128,0.12)" },
+  fumble:      { label: "ファンブル",   color: "#f87171", bg: "rgba(248,113,113,0.12)" },
+}
+
+function RateBar({ value, color }: { value: number; color: string }) {
+  return (
+    <div className="flex items-center gap-2">
+      <span className="font-['JetBrains_Mono'] text-sm w-14 text-right" style={{ color }}>
+        {(value * 100).toFixed(1)}%
+      </span>
+      <div className="w-16 h-1 bg-[#1e2030] rounded-full overflow-hidden">
+        <div
+          className="h-full rounded-full transition-all"
+          style={{ width: `${Math.min(value * 100, 100)}%`, backgroundColor: color }}
+        />
+      </div>
+    </div>
+  )
+}
+
 export default function StatsTable({ stats }: Props) {
   return (
-    <table>
-      <thead>
-        <tr>
-          <th>Character</th>
-          <th>sum</th>
-          <th>critical</th>
-          <th>special</th>
-          <th>hardSuccess</th>
-          <th>success</th>
-          <th>failure</th>
-          <th>fumble</th>
-          <th>successRate</th>
-          <th>criticalRate</th>
-          <th>fumbleRate</th>
-        </tr>
-      </thead>
-      <tbody>
-        {stats.map(stat => (
-          <tr key={stat.charName}>
-            <td>{stat.charName}</td>
-            <td>{stat.total}</td>
-            <td>{stat.counts.critical}</td>
-            <td>{stat.counts.special}</td>
-            <td>{stat.counts.hardSuccess}</td>
-            <td>{stat.counts.success}</td>
-            <td>{stat.counts.failure}</td>
-            <td>{stat.counts.fumble}</td>
-            <td>{(stat.successRate * 100).toFixed(2)}%</td>
-            <td>{(stat.criticalRate * 100).toFixed(2)}%</td>
-            <td>{(stat.fumbleRate * 100).toFixed(2)}%</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <div className="border border-[#2a2a3e] bg-[#0d0f1a]">
+      <div className="flex items-center gap-3 px-5 py-3 border-b border-[#2a2a3e]">
+        <div className="w-1.5 h-5 bg-[#c9a24c]" />
+        <span className="font-['Cinzel'] text-sm tracking-[0.2em] text-[#c9a24c] uppercase">
+          判定記録
+        </span>
+        <span className="ml-auto font-['JetBrains_Mono'] text-xs text-[#4a4a6a]">
+          {stats.length} characters
+        </span>
+      </div>
+
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-b border-[#2a2a3e]">
+              <th className="text-left px-5 py-3 font-['Cinzel'] text-xs tracking-[0.15em] text-[#6b6888] uppercase">
+                探索者
+              </th>
+              <th className="px-3 py-3 font-['Cinzel'] text-xs tracking-[0.1em] text-[#6b6888] uppercase text-center">
+                合計
+              </th>
+              {Object.entries(RESULT_CONFIG).map(([key, cfg]) => (
+                <th
+                  key={key}
+                  className="px-3 py-3 font-['Cinzel'] text-xs tracking-[0.1em] uppercase text-center"
+                  style={{ color: cfg.color + "99" }}
+                >
+                  {cfg.label}
+                </th>
+              ))}
+              <th className="px-4 py-3 font-['Cinzel'] text-xs tracking-[0.1em] text-[#34d399aa] uppercase text-center">
+                成功率
+              </th>
+              <th className="px-4 py-3 font-['Cinzel'] text-xs tracking-[0.1em] text-[#fbbf24aa] uppercase text-center">
+                大成功率
+              </th>
+              <th className="px-4 py-3 font-['Cinzel'] text-xs tracking-[0.1em] text-[#f87171aa] uppercase text-center">
+                致命率
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {stats.map((stat, i) => (
+              <tr
+                key={stat.charName}
+                className="border-b border-[#1e2030] hover:bg-[#c9a24c]/5 transition-colors duration-150 group"
+              >
+                <td className="px-5 py-3 font-['Noto_Serif_JP'] text-[#e8e0d0] group-hover:text-[#c9a24c] transition-colors">
+                  <span className="text-[#4a4a6a] font-['JetBrains_Mono'] text-xs mr-2">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  {stat.charName || <span className="text-[#4a4a6a] italic">unknown</span>}
+                </td>
+                <td className="px-3 py-3 text-center font-['JetBrains_Mono'] text-[#8888aa]">
+                  {stat.total}
+                </td>
+                {(Object.keys(RESULT_CONFIG) as ResultType[]).map((key) => {
+                  const cfg = RESULT_CONFIG[key]
+                  const count = stat.counts[key]
+                  return (
+                    <td key={key} className="px-3 py-3 text-center">
+                      {count > 0 ? (
+                        <span
+                          className="inline-block px-2 py-0.5 rounded text-xs font-['JetBrains_Mono'] font-medium"
+                          style={{ color: cfg.color, backgroundColor: cfg.bg }}
+                        >
+                          {count}
+                        </span>
+                      ) : (
+                        <span className="text-[#2a2a3e] font-['JetBrains_Mono'] text-xs">—</span>
+                      )}
+                    </td>
+                  )
+                })}
+                <td className="px-4 py-3">
+                  <RateBar value={stat.successRate} color="#34d399" />
+                </td>
+                <td className="px-4 py-3">
+                  <RateBar value={stat.criticalRate} color="#fbbf24" />
+                </td>
+                <td className="px-4 py-3">
+                  <RateBar value={stat.fumbleRate} color="#f87171" />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
   )
 }
