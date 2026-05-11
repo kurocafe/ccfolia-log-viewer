@@ -34,12 +34,13 @@ export function parserLog(html: string): DiceRollEntry[] {
   const entries: DiceRollEntry[] = []
   for (const p of paragraphs) {
     const spans = p.querySelectorAll('span')
-    const charName = spans[1].textContent?.trim() ?? ''
+    const charName = spans[1].textContent?.trim().replace(/\s+/g, ' ') ?? ''
     const commandText = spans[2].textContent?.trim() ?? ''
     if (!commandText.startsWith('CC<=') && !commandText.startsWith('CCB<=')) {
       continue
     }
     const parts = commandText.split('＞')
+    if (parts.length < 2) continue
     const resultLabel = parts[parts.length - 1].trim()
     if (!isNaN(Number(resultLabel))) {
       continue

@@ -14,7 +14,8 @@ export interface DiceRollEntry {
 export interface CharacterStats {
   charName: string
   total: number
-  counts: Record<ResultType, number>
+  counts: Record<ResultType, number> // 
   successRate: number
+  criticalRate: number
   fumbleRate: number
 }
