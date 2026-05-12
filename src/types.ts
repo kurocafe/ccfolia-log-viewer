@@ -19,3 +19,12 @@ export interface CharacterStats {
   criticalRate: number
   fumbleRate: number
 }
+
+export interface GrowthResult {
+  charName: string
+  skill: string
+  target: number
+  autoIncrease?: number
+  reRoll?: number
+  reRollIncrease?: number
+}

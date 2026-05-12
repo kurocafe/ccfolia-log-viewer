@@ -2,6 +2,8 @@ import type { CharacterStats, ResultType } from "../types"
 
 interface Props {
   stats: CharacterStats[]
+  selectedChar: string[]
+  onToggle: (charName: string) => void
 }
 
 const RESULT_CONFIG: Record<ResultType, { label: string; color: string; bg: string }> = {
@@ -29,7 +31,7 @@ function RateBar({ value, color }: { value: number; color: string }) {
   )
 }
 
-export default function StatsTable({ stats }: Props) {
+export default function StatsTable({ stats, selectedChar, onToggle }: Props) {
   return (
     <div className="border border-[#2a2a3e] bg-[#0d0f1a]">
       <div className="flex items-center gap-3 px-5 py-3 border-b border-[#2a2a3e]">
@@ -49,25 +51,25 @@ export default function StatsTable({ stats }: Props) {
               <th className="text-left px-5 py-3 font-['Cinzel'] text-xs tracking-[0.15em] text-[#6b6888] uppercase">
                 探索者
               </th>
-              <th className="px-3 py-3 font-['Cinzel'] text-xs tracking-[0.1em] text-[#6b6888] uppercase text-center">
+              <th className="px-3 py-3 font-['Cinzel'] text-xs tracking-widest text-[#6b6888] uppercase text-center">
                 合計
               </th>
               {Object.entries(RESULT_CONFIG).map(([key, cfg]) => (
                 <th
                   key={key}
-                  className="px-3 py-3 font-['Cinzel'] text-xs tracking-[0.1em] uppercase text-center"
+                  className="px-3 py-3 font-['Cinzel'] text-xs tracking-widest uppercase text-center"
                   style={{ color: cfg.color + "99" }}
                 >
                   {cfg.label}
                 </th>
               ))}
-              <th className="px-4 py-3 font-['Cinzel'] text-xs tracking-[0.1em] text-[#34d399aa] uppercase text-center">
+              <th className="px-4 py-3 font-['Cinzel'] text-xs tracking-widest text-[#34d399aa] uppercase text-center">
                 成功率
               </th>
-              <th className="px-4 py-3 font-['Cinzel'] text-xs tracking-[0.1em] text-[#fbbf24aa] uppercase text-center">
+              <th className="px-4 py-3 font-['Cinzel'] text-xs tracking-widest text-[#fbbf24aa] uppercase text-center">
                 大成功率
               </th>
-              <th className="px-4 py-3 font-['Cinzel'] text-xs tracking-[0.1em] text-[#f87171aa] uppercase text-center">
+              <th className="px-4 py-3 font-['Cinzel'] text-xs tracking-widest text-[#f87171aa] uppercase text-center">
                 致命率
               </th>
             </tr>
@@ -79,10 +81,18 @@ export default function StatsTable({ stats }: Props) {
                 className="border-b border-[#1e2030] hover:bg-[#c9a24c]/5 transition-colors duration-150 group"
               >
                 <td className="px-5 py-3 font-['Noto_Serif_JP'] text-[#e8e0d0] group-hover:text-[#c9a24c] transition-colors">
-                  <span className="text-[#4a4a6a] font-['JetBrains_Mono'] text-xs mr-2">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  {stat.charName || <span className="text-[#4a4a6a] italic">unknown</span>}
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="checkbox"
+                      checked={selectedChar.includes(stat.charName)}
+                      onChange={() => onToggle(stat.charName)}
+                      className="w-3.5 h-3.5 accent-[#c9a24c] cursor-pointer"
+                    />
+                    <span className="text-[#4a4a6a] font-['JetBrains_Mono'] text-xs">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    {stat.charName || <span className="text-[#4a4a6a] italic">unknown</span>}
+                  </div>
                 </td>
                 <td className="px-3 py-3 text-center font-['JetBrains_Mono'] text-[#8888aa]">
                   {stat.total}
