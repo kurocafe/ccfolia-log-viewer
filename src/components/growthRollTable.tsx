@@ -29,6 +29,7 @@ export default function GrowthRollTable({ growthResults }: Props) {
                     <th className="px-3 py-3 font-['Cinzel'] text-xs tracking-widest text-[#6b6888] uppercase text-center">現在値</th>
                     <th className="px-3 py-3 font-['Cinzel'] text-xs tracking-widest text-[#fbbf24aa] uppercase text-center">クリティカル成長</th>
                     <th className="px-3 py-3 font-['Cinzel'] text-xs tracking-widest text-[#6b6888] uppercase text-center">成長ロール</th>
+                    <th className="px-3 py-3 font-['Cinzel'] text-xs tracking-widest text-[#6b6888] uppercase text-center">ロール成長</th>
                     <th className="px-3 py-3 font-['Cinzel'] text-xs tracking-widest text-[#34d399aa] uppercase text-center">結果</th>
                   </tr>
                 </thead>
@@ -66,6 +67,15 @@ export default function GrowthRollTable({ growthResults }: Props) {
                             </span>
                           ) : (
                             <span className="text-[#2a2a3e] text-xs">—</span>
+                          )}
+                        </td>
+                        <td className="px-3 py-3 text-center">
+                          {result.reRollIncrease !== undefined ? (
+                            <span className="inline-block px-2 py-0.5 rounded text-xs font-['JetBrains_Mono'] font-medium text-[#a78bfa] bg-[rgba(167,139,250,0.12)]">
+                              +{result.reRollIncrease}
+                            </span>
+                          ) : (
+                            <span className="text-[#2a2a3e] font-['JetBrains_Mono'] text-xs">-</span>
                           )}
                         </td>
                         <td className="px-3 py-3 text-center">
