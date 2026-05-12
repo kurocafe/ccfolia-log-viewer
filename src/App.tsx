@@ -75,13 +75,18 @@ export default function App() {
           <>
             <StatsTable stats={stats} selectedChar={selectedChar} onToggle={toggleChar} />
             <div className="flex justify-center mt-6">
-              <button
-                onClick={handleGrowthRoll}
-                disabled={selectedChar.length === 0 || hasRolled}
-                className="border border-[#c9a24c]/40 hover:border-[#c9a24c] bg-[#0d0f1a] hover:bg-[#c9a24c]/5 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300 px-8 py-3 font-['Cinzel'] text-sm tracking-[0.25em] text-[#c9a24c] uppercase"
-              >
-                ✦ 成長ロール実行
-              </button>
+              <div className="flex flex-col items-center gap-2">
+                <button
+                  onClick={handleGrowthRoll}
+                  disabled={selectedChar.length === 0 || hasRolled}
+                  className="border border-[#c9a24c]/40 hover:border-[#c9a24c] bg-[#0d0f1a] hover:bg-[#c9a24c]/5 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300 px-8 py-3 font-['Cinzel'] text-sm tracking-[0.25em] text-[#c9a24c] uppercase"
+                >
+                  ✦ 成長ロール実行
+                </button>
+                <p className="text-[#4a4a6a] text-xs font-['Noto_Serif_JP']">
+                  ※ 初期値成功による成長判定は含まれていません
+                </p>
+              </div>
             </div>
             {growthResults.length > 0 && (
               <div className="mt-6">
