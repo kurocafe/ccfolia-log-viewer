@@ -9,6 +9,7 @@ export interface DiceRollEntry {
   target: number
   roll: number
   result: ResultType
+  baseTarget: number
 }
 
 export interface CharacterStats {
