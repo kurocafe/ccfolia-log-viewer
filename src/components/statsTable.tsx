@@ -99,13 +99,13 @@ export default function StatsTable({ stats, selectedChar, onToggle }: Props) {
               <th className="px-4 py-3 font-['Cinzel'] text-xs tracking-widest text-[#fbbf24aa] uppercase text-center cursor-pointer hover:text-[#fbbf24] transition-colors"
                 onClick={() => handleSort('criticalRate')}
               >
-                大成功率
+                クリティカル率
                 {sortKey === 'criticalRate' && (sortDir === 'asc' ? ' ▲' : ' ▼')}
               </th>
               <th className="px-4 py-3 font-['Cinzel'] text-xs tracking-widest text-[#f87171aa] uppercase text-center cursor-pointer hover:text-[#f87171] transition-colors"
                 onClick={() => handleSort('fumbleRate')}
               >
-                致命率
+                ファンブル率
                 {sortKey === 'fumbleRate' && (sortDir === 'asc' ? ' ▲' : ' ▼')}
               </th>
             </tr>
