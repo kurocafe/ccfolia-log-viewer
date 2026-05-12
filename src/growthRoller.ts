@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import type { DiceRollEntry, GrowthResult } from "./types";
 
 export function growthRoller(entries: DiceRollEntry[]): GrowthResult[] {
@@ -17,8 +16,8 @@ export function growthRoller(entries: DiceRollEntry[]): GrowthResult[] {
   }
 
   const results: GrowthResult[] = []
-  for (const [_, skillMap] of groups) {
-    for (const [__, skillEntries] of skillMap) {
+  for (const [, skillMap] of groups) {
+    for (const [, skillEntries] of skillMap) {
 
       const hasCritical = skillEntries.some(e => e.result === 'critical')
       const hasSuccess = skillEntries.some(e => e.result === 'success' || e.result === 'hardSuccess' || e.result === 'special' || e.result === 'critical')
