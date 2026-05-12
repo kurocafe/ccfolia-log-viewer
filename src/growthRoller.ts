@@ -19,7 +19,11 @@ export function growthRoller(entries: DiceRollEntry[]): GrowthResult[] {
   for (const [, skillMap] of groups) {
     for (const [, skillEntries] of skillMap) {
 
-      const hasCritical = skillEntries.some(e => e.result === 'critical')
+      const hasCritical = skillEntries.some(e => {
+        if (e.result !== 'critical') return false
+        if (e.target >= 100) return e.roll === 1
+        return true
+      })
       const hasSuccess = skillEntries.some(e => e.result === 'success' || e.result === 'hardSuccess' || e.result === 'special' || e.result === 'critical')
 
       // 対象外はスキップ
