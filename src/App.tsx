@@ -11,6 +11,7 @@ export default function App() {
   const [growthResults, setGrowthResults] = useState<GrowthResult[]>([])
   const [selectedChar, setSelectedChar] = useState<string[]>([])
   const [entries, setEntries] = useState<DiceRollEntry[]>([])
+  const [hasRolled, setHasRolled] = useState(false)
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -23,6 +24,7 @@ export default function App() {
       setEntries(parsedEntries)
       setStats(analyzer(parsedEntries))
       setSelectedChar([])
+      setHasRolled(false)
       // setGrowthResults(growthRoller(parsedEntries))
     }
     reader.readAsText(file)
@@ -31,6 +33,7 @@ export default function App() {
   const handleGrowthRoll = () => {
     const filtered = entries.filter(e => selectedChar.includes(e.charName))
     setGrowthResults(growthRoller(filtered))
+    setHasRolled(true)
   }
 
   const toggleChar = (charName: string) => {
@@ -74,7 +77,7 @@ export default function App() {
             <div className="flex justify-center mt-6">
               <button
                 onClick={handleGrowthRoll}
-                disabled={selectedChar.length === 0}
+                disabled={selectedChar.length === 0 || hasRolled}
                 className="border border-[#c9a24c]/40 hover:border-[#c9a24c] bg-[#0d0f1a] hover:bg-[#c9a24c]/5 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300 px-8 py-3 font-['Cinzel'] text-sm tracking-[0.25em] text-[#c9a24c] uppercase"
               >
                 ✦ 成長ロール実行

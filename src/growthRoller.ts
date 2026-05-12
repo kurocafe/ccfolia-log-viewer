@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import type { DiceRollEntry, GrowthResult } from "./types";
 
 export function growthRoller(entries: DiceRollEntry[]): GrowthResult[] {
   const groups = new Map<string, Map<string, DiceRollEntry[]>>()
+  const NON_GROWTH_SKILLS = ['アイデア', '幸運', '知識', 'クトゥルフ神話']
 
   for (const entry of entries) {
     if (!groups.has(entry.charName)) {
@@ -23,6 +25,9 @@ export function growthRoller(entries: DiceRollEntry[]): GrowthResult[] {
       const hasSuccess = skillEntries.some(e => e.result === 'success' || e.result === 'hardSuccess' || e.result === 'special' || e.result === 'critical')
 
       // 対象外はスキップ
+      if (NON_GROWTH_SKILLS.includes(skillEntries[0].skill)) continue
+      if (skillEntries[0].skill.includes('×')) continue
+
       if (!hasCritical && !hasSuccess) continue
 
       const target = skillEntries[0].target
