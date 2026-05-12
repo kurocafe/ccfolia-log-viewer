@@ -21,7 +21,7 @@ export function growthRoller(entries: DiceRollEntry[]): GrowthResult[] {
 
       const hasCritical = skillEntries.some(e => {
         if (e.result !== 'critical') return false
-        if (e.target >= 100) return e.roll === 1
+        if (e.baseTarget >= 100) return e.roll === 1
         return true
       })
       const hasSuccess = skillEntries.some(e => e.result === 'success' || e.result === 'hardSuccess' || e.result === 'special' || e.result === 'critical')
