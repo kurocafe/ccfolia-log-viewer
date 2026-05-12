@@ -52,7 +52,7 @@ export default function App() {
             ✦ ARCANE CHRONICLE ✦
           </div>
           <h1 className="text-3xl font-['Cinzel'] font-semibold text-[#e8e0d0] tracking-widest mb-2">
-            ccfolia Log Viewer
+            CCFOILIA LOG VIEWER
           </h1>
           <div className="w-48 h-px bg-linear-to-r from-transparent via-[#c9a24c] to-transparent mx-auto" />
         </header>

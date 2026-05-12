@@ -16,7 +16,6 @@ export function growthRoller(entries: DiceRollEntry[]): GrowthResult[] {
     skillMap.get(entry.skill)!.push(entry)
   }
 
-  console.log(groups)
   const results: GrowthResult[] = []
   for (const [_, skillMap] of groups) {
     for (const [__, skillEntries] of skillMap) {
