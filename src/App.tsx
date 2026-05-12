@@ -66,7 +66,7 @@ export default function App() {
               className="hidden"
             />
             <div className="border border-[#c9a24c]/40 hover:border-[#c9a24c] bg-[#0d0f1a] hover:bg-[#c9a24c]/5 transition-all duration-300 px-8 py-3 font-['Cinzel'] text-sm tracking-[0.25em] text-[#c9a24c] uppercase">
-              ⊕ ログファイルを選択
+              ⊕ ログファイルを選択 (.html)
             </div>
           </label>
         </div>
