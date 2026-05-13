@@ -19,14 +19,22 @@ export default function App() {
 
     const reader = new FileReader()
     reader.onload = (event) => {
-      const html = event.target?.result as string
-      const parsedEntries = parserLog(html)
-      setEntries(parsedEntries)
-      setStats(analyzer(parsedEntries))
-      setSelectedChar([])
-      setHasRolled(false)
-      setGrowthResults([])
+      try {
+        const html = event.target?.result as string
+        const parsedEntries = parserLog(html)
+        setEntries(parsedEntries)
+        setStats(analyzer(parsedEntries))
+        setSelectedChar([])
+        setHasRolled(false)
+        setGrowthResults([])
+      } catch (e) {
+        console.error("ログの解析に失敗しました：", e)
+      }
     }
+    reader.onerror = () => {
+      console.error("ファイルの読み込みに失敗しました")
+    }
+
     reader.readAsText(file)
   }
 

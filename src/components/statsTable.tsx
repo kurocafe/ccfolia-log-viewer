@@ -7,6 +7,8 @@ interface Props {
   onToggle: (charName: string) => void
 }
 
+type SortableKey = 'total' | 'successRate' | 'criticalRate' | 'fumbleRate'
+
 const RESULT_CONFIG: Record<ResultType, { label: string; color: string; bg: string }> = {
   critical: { label: "クリティカル", color: "#fbbf24", bg: "rgba(251,191,36,0.12)" },
   special: { label: "スペシャル", color: "#a78bfa", bg: "rgba(167,139,250,0.12)" },
@@ -33,7 +35,7 @@ function RateBar({ value, color }: { value: number; color: string }) {
 }
 
 export default function StatsTable({ stats, selectedChar, onToggle }: Props) {
-  const [sortKey, setSortKey] = useState<string | null>(null)
+  const [sortKey, setSortKey] = useState<SortableKey | null>(null)
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('asc')
 
   const sorted = [...stats].sort((a, b) => {
@@ -44,7 +46,7 @@ export default function StatsTable({ stats, selectedChar, onToggle }: Props) {
     return sortDir === 'asc' ? aVal - bVal : bVal - aVal
   })
 
-  const handleSort = (key: string) => {
+  const handleSort = (key: SortableKey) => {
     if (sortKey === key) {
       setSortDir(prev => prev === 'asc' ? 'desc' : 'asc')
     } else {
@@ -82,9 +84,8 @@ export default function StatsTable({ stats, selectedChar, onToggle }: Props) {
               {Object.entries(RESULT_CONFIG).map(([key, cfg]) => (
                 <th
                   key={key}
-                  className="px-3 py-3 font-['Cinzel'] text-xs tracking-widest uppercase text-center cursor-pointer hover:text-[#6b6888] transition-colors"
+                  className="px-3 py-3 font-['Cinzel'] text-xs tracking-widest uppercase text-center"
                   style={{ color: cfg.color + "99" }}
-                  onClick={() => handleSort(key)}
                 >
                   {cfg.label}
                 </th>

@@ -55,6 +55,9 @@ export function parserLog(html: string): DiceRollEntry[] {
     const baseTargetMatch = commandText.match(/CC[B]?<=(\d+)/)
     const baseTarget = baseTargetMatch?.[1]
 
+    if (!skill || !target || !baseTarget || isNaN(Number(roll)
+    )) continue
+
     const result = mapResultType(resultLabel)
     if (result === null) continue
     entries.push({

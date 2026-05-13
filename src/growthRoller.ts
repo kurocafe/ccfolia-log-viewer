@@ -1,8 +1,8 @@
 import type { DiceRollEntry, GrowthResult } from "./types";
+const NON_GROWTH_SKILLS = ['アイデア', '幸運', '知識', 'クトゥルフ神話']
 
 export function growthRoller(entries: DiceRollEntry[]): GrowthResult[] {
   const groups = new Map<string, Map<string, DiceRollEntry[]>>()
-  const NON_GROWTH_SKILLS = ['アイデア', '幸運', '知識', 'クトゥルフ神話']
 
   for (const entry of entries) {
     if (!groups.has(entry.charName)) {

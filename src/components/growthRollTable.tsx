@@ -10,7 +10,7 @@ export default function GrowthRollTable({ growthResults }: Props) {
   return (
     <div className="space-y-6">
       {charNames.map(charName => {
-        const charRolles = growthResults.filter(r => r.charName === charName)
+        const charRolls = growthResults.filter(r => r.charName === charName)
         return (
           <div key={charName} className="border border-[#2a2a3e] bg-[#0d0f1a]">
             <div className="flex items-center gap-3 px-5 py-3 border-b border-[#2a2a3e]">
@@ -34,8 +34,8 @@ export default function GrowthRollTable({ growthResults }: Props) {
                   </tr>
                 </thead>
                 <tbody>
-                  {charRolles.map(result => {
-                    const reRollFailed = result.reRoll !== undefined && result.reRoll > result.target
+                  {charRolls.map(result => {
+                    const reRollGrows = result.reRoll !== undefined && result.reRoll > result.target
                     const totalIncrease = (result.autoIncrease ?? 0) + (result.reRollIncrease ?? 0)
                     return (
                       <tr
@@ -59,10 +59,10 @@ export default function GrowthRollTable({ growthResults }: Props) {
                         </td>
                         <td className="px-3 py-3 text-center font-['JetBrains_Mono'] text-sm">
                           {result.reRoll !== undefined ? (
-                            <span className={reRollFailed ? "text-[#f87171]" : "text-[#6b7280]"}>
+                            <span className={reRollGrows ? "text-[#f87171]" : "text-[#6b7280]"}>
                               {result.reRoll}
                               <span className="text-xs ml-1">
-                                {reRollFailed ? "（失敗）" : "（成功）"}
+                                {reRollGrows ? "（失敗）" : "（成功）"}
                               </span>
                             </span>
                           ) : (
