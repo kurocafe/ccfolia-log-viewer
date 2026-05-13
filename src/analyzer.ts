@@ -1,4 +1,4 @@
-import type { CharacterStats, DiceRollEntry, ResultType } from "./types";
+import { SUCCESS_RESULTS, type CharacterStats, type DiceRollEntry, type ResultType } from "./types";
 
 export function analyzer(entries: DiceRollEntry[]) {
   const groups = new Map<string, DiceRollEntry[]>()
@@ -28,7 +28,7 @@ export function analyzer(entries: DiceRollEntry[]) {
       charName,
       total: charEntries.length,
       counts: counts,
-      successRate: charEntries.filter(e => e.result === 'success' || e.result === 'critical' || e.result === 'hardSuccess' || e.result === 'special').length / charEntries.length || 0,
+      successRate: charEntries.filter(e => SUCCESS_RESULTS.includes(e.result)).length / charEntries.length || 0,
       criticalRate: charEntries.filter(e => e.result === 'critical').length / charEntries.length || 0,
       fumbleRate: charEntries.filter(e => e.result === 'fumble').length / charEntries.length || 0
     })

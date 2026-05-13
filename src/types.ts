@@ -2,6 +2,8 @@ type DiceCommand = 'CC' | 'CCB'
 
 export type ResultType = 'critical' | 'special' | 'hardSuccess' | 'success' | 'failure' | 'fumble'
 
+export const SUCCESS_RESULTS: ResultType[] = ['success', 'hardSuccess', 'special', 'critical']
+
 export interface DiceRollEntry {
   charName: string
   command: DiceCommand

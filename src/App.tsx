@@ -12,6 +12,7 @@ export default function App() {
   const [selectedChar, setSelectedChar] = useState<string[]>([])
   const [entries, setEntries] = useState<DiceRollEntry[]>([])
   const [hasRolled, setHasRolled] = useState(false)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -27,12 +28,15 @@ export default function App() {
         setSelectedChar([])
         setHasRolled(false)
         setGrowthResults([])
+        setErrorMessage(null)
       } catch (e) {
         console.error("ログの解析に失敗しました：", e)
+        setErrorMessage("ログの解析に失敗しました。正しいccfoliaのHTMLファイルか確認してください。")
       }
     }
     reader.onerror = () => {
       console.error("ファイルの読み込みに失敗しました")
+      setErrorMessage("ファイルの読み込みに失敗しました。再度試してください。")
     }
 
     reader.readAsText(file)
@@ -65,7 +69,7 @@ export default function App() {
           <div className="w-48 h-px bg-linear-to-r from-transparent via-[#c9a24c] to-transparent mx-auto" />
         </header>
 
-        <div className="flex justify-center mb-10">
+        <div className="flex flex-col items-center mb-10">
           <label className="cursor-pointer group">
             <input
               type="file"
@@ -77,6 +81,11 @@ export default function App() {
               ⊕ ログファイルを選択 (.html)
             </div>
           </label>
+          {errorMessage && (
+            <p className="text-center text-[#f87171] text-sm mt-4">
+              {errorMessage}
+            </p>
+          )}
         </div>
 
         {stats.length > 0 && (

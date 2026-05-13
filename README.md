@@ -1,73 +1,51 @@
-# React + TypeScript + Vite
+# ccfolia Log Viewer
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+ccfoliaのダイスログを解析・可視化するツールです。
 
-Currently, two official plugins are available:
+## 概要
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+ccfoliaのセッションログ（HTML形式）を読み込み、キャラクターごとのダイス判定結果を集計します。また、セッション終了後の成長ロールを自動で処理する機能も備えています。
 
-## React Compiler
+**主な機能**
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- キャラクターごとの判定結果（クリティカル / スペシャル / ハード成功 / 成功 / 失敗 / ファンブル）を集計
+- 成功率・クリティカル率・ファンブル率の表示
+- 列ヘッダークリックによる並び替え
+- キャラクターを選択して成長ロールを自動実行
+- クリティカル成長・成長ロール・合計増加値の表示
 
-## Expanding the ESLint configuration
+## 使い方
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+1. ccfoliaのセッションログをHTML形式でエクスポートする
+2. 「ccfolia ログ (.html) を選択」ボタンからファイルを読み込む
+3. 判定記録テーブルで結果を確認する
+4. 成長ロールを行うキャラクターにチェックを入れる
+5. 「成長ロール実行」ボタンを押す
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+> - 初期値成功による成長判定は含まれていません。
+> - 成長ルールは「どんでも卓」に準拠しています。
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## 技術スタック
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- [React](https://react.dev/) 19
+- [TypeScript](https://www.typescriptlang.org/) 6
+- [Vite](https://vite.dev/) 8
+- [Tailwind CSS](https://tailwindcss.com/) 4
+
+## 環境構築
+**必要なもの**
+- [Node.js](https://nodejs.org/) 18以上（npm同梱）
+
+```bash
+# リポジトリをクローン
+git clone https://github.com/kurocafe/ccfolia-log-viewer.git
+cd ccfolia-log-viewer
+
+# 依存パッケージをインストール
+npm install
+
+# 開発サーバーを起動
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+起動後にターミナルに表示されるURLを開いてください

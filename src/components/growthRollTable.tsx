@@ -39,7 +39,7 @@ export default function GrowthRollTable({ growthResults }: Props) {
                     const totalIncrease = (result.autoIncrease ?? 0) + (result.reRollIncrease ?? 0)
                     return (
                       <tr
-                        key={result.skill}
+                        key={`${result.charName}-${result.skill}`}
                         className="border-b border-[#1e2030] hover:bg-[#a78bfa]/5 transition-colors duration-150"
                       >
                         <td className="px-5 py-3 font-['Noto_Serif_JP'] text-[#e8e0d0]">
@@ -88,14 +88,14 @@ export default function GrowthRollTable({ growthResults }: Props) {
                           )}
                         </td>
                       </tr>
-                    )
+                )
                   })}
-                </tbody>
-              </table>
-            </div>
+              </tbody>
+            </table>
           </div>
-        )
-      })}
-    </div>
+          </div>
+  )
+})}
+    </div >
   )
 }

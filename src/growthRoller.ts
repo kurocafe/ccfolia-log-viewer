@@ -1,4 +1,4 @@
-import type { DiceRollEntry, GrowthResult } from "./types";
+import { SUCCESS_RESULTS, type DiceRollEntry, type GrowthResult } from "./types";
 const NON_GROWTH_SKILLS = ['アイデア', '幸運', '知識', 'クトゥルフ神話']
 
 export function growthRoller(entries: DiceRollEntry[]): GrowthResult[] {
@@ -24,7 +24,7 @@ export function growthRoller(entries: DiceRollEntry[]): GrowthResult[] {
         if (e.baseTarget >= 100) return e.roll === 1
         return true
       })
-      const hasSuccess = skillEntries.some(e => e.result === 'success' || e.result === 'hardSuccess' || e.result === 'special' || e.result === 'critical')
+      const hasSuccess = skillEntries.some(e => SUCCESS_RESULTS.includes(e.result))
 
       // 対象外はスキップ
       if (NON_GROWTH_SKILLS.includes(skillEntries[0].skill)) continue
