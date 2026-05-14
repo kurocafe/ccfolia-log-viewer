@@ -18,13 +18,16 @@ vite + react + typescript + tailwindcss
 
 ## 重要なコンテキスト
 
-<!-- Claudeが知っておくべきアーキテクチャの決定や背景情報を記述してください -->
+ - CoC（クトゥルフ神話TRPG）6版のルールに基づいている
+ - 成長ロールは「失敗＝成長できる」（reRoll > target で成長）
+ - baseTargetは修正前の技能値（デバフ後の値ではない）
+ - NON_GROWTH_SKILLSは成長判定対象外
 
 ## よく使うコマンド
 
 ```bash
 # 例: 開発サーバー起動
-# npm run dev
+npm run dev
 
 # 例: テスト実行
 # npm test

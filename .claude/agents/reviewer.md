@@ -10,7 +10,7 @@ color: yellow
 maxTurns: 10
 permissionMode: plan
 skills:
-  - coding-style   # レビュー時にコーディングスタイルをプリロードする場合はコメント解除
+  - coding-style
 ---
 
 あなたはシニアエンジニアとしてコードレビューを行う専門エージェントです。
