@@ -14,6 +14,8 @@ export default function App() {
   const [hasRolled, setHasRolled] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [isDragging, setIsDragging] = useState(false)
+  const [npcThreshold, setNpcThreshold] = useState<number>(0)
+  const [excludeNpc, setExcludeNpc] = useState(false)
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -23,13 +25,7 @@ export default function App() {
     reader.onload = (event) => {
       try {
         const html = event.target?.result as string
-        const parsedEntries = parserLog(html)
-        setEntries(parsedEntries)
-        setStats(analyzer(parsedEntries))
-        setSelectedChar([])
-        setHasRolled(false)
-        setGrowthResults([])
-        setErrorMessage(null)
+        processHtmlContent(html)
       } catch (e) {
         console.error("ログの解析に失敗しました：", e)
         setErrorMessage("ログの解析に失敗しました。正しいccfoliaのHTMLファイルか確認してください。")
@@ -41,6 +37,30 @@ export default function App() {
     }
 
     reader.readAsText(file)
+  }
+
+  const calcNpcThreshold = (stats: CharacterStats[]) => {
+    const totals = stats.map(s => s.total)
+    const sorted = [...totals].sort((a, b) => a - b)
+    const q3Index = Math.floor(sorted.length * 0.75)
+    const upperValues = sorted.slice(q3Index)
+    const upperMean = upperValues.reduce((a, b) => a + b, 0) / upperValues.length
+    return upperMean * 0.3
+  }
+
+  const processHtmlContent = (html: string) => {
+    const parsedEntries = parserLog(html)
+    setEntries(parsedEntries)
+
+    const analyzedStats = analyzer(parsedEntries)
+    setStats(analyzedStats)
+
+    setNpcThreshold(calcNpcThreshold(analyzedStats))
+
+    setSelectedChar([])
+    setHasRolled(false)
+    setGrowthResults([])
+    setErrorMessage(null)
   }
 
   const handleGrowthRoll = () => {
@@ -74,13 +94,7 @@ export default function App() {
     reader.onload = (event) => {
       try {
         const html = event.target?.result as string
-        const parsedEntries = parserLog(html)
-        setEntries(parsedEntries)
-        setStats(analyzer(parsedEntries))
-        setSelectedChar([])
-        setHasRolled(false)
-        setGrowthResults([])
-        setErrorMessage(null)
+        processHtmlContent(html)
       } catch (e) {
         console.error("ログの解析に失敗しました：", e)
         setErrorMessage("ログの解析に失敗しました。正しいccfoliaのHTMLファイルか確認してください。")
@@ -100,6 +114,10 @@ export default function App() {
         : [...prev, charName]
     )
   }
+
+  const displayStats = excludeNpc
+    ? stats.filter(s => s.total >= npcThreshold)
+    : stats
 
   return (
     <div className="min-h-screen bg-[#07080f] text-[#e8e0d0] px-4 py-10">
@@ -143,7 +161,19 @@ export default function App() {
 
         {stats.length > 0 && (
           <>
-            <StatsTable stats={stats} selectedChar={selectedChar} onToggle={toggleChar} />
+            <div className="flex justify-end mb-2">
+              <label className="flex items-center gap-2 text-sm text-[#c9a24c] cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={excludeNpc}
+                  onChange={(e) => setExcludeNpc(e.target.checked)}
+                  className="accent-[#c9a24c]"
+                />
+                NPCとおもわしきキャラクターを除外する
+              </label>
+            </div>
+
+            <StatsTable stats={displayStats} selectedChar={selectedChar} onToggle={toggleChar} />
             <div className="flex justify-center mt-6">
               <div className="flex flex-col items-center gap-2">
                 <button

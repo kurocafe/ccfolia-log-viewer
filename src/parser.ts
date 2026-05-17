@@ -60,6 +60,7 @@ export function parserLog(html: string): DiceRollEntry[] {
 
     const result = mapResultType(resultLabel)
     if (result === null) continue
+
     entries.push({
       charName,
       command,

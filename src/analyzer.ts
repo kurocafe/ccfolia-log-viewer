@@ -20,7 +20,13 @@ export function analyzer(entries: DiceRollEntry[]) {
       failure: 0,
       fumble: 0
     }
-    for (const e of charEntries) {
+
+    const effectiveEntries = charEntries.map(e => ({
+      ...e,
+      result: e.command === 'CCB' && e.roll >= 96 ? 'fumble' as ResultType : e.result
+    }))
+
+    for (const e of effectiveEntries) {
       counts[e.result]++
     }
 
@@ -28,9 +34,9 @@ export function analyzer(entries: DiceRollEntry[]) {
       charName,
       total: charEntries.length,
       counts: counts,
-      successRate: charEntries.filter(e => SUCCESS_RESULTS.includes(e.result)).length / charEntries.length || 0,
-      criticalRate: charEntries.filter(e => e.result === 'critical').length / charEntries.length || 0,
-      fumbleRate: charEntries.filter(e => e.result === 'fumble').length / charEntries.length || 0
+      successRate: effectiveEntries.filter(e => SUCCESS_RESULTS.includes(e.result)).length / effectiveEntries.length || 0,
+      criticalRate: effectiveEntries.filter(e => e.result === 'critical').length / effectiveEntries.length || 0,
+      fumbleRate: effectiveEntries.filter(e => e.result === 'fumble').length / effectiveEntries.length || 0
     })
   }
 
