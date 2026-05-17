@@ -117,7 +117,7 @@ export default function StatsTable({ stats, selectedChar, onToggle }: Props) {
                 key={stat.charName}
                 className="border-b border-[#1e2030] hover:bg-[#c9a24c]/5 transition-colors duration-150 group"
               >
-                <td className="px-5 py-3 font-['Noto_Serif_JP'] text-[#e8e0d0] group-hover:text-[#c9a24c] transition-colors">
+                <td className="px-5 py-3 font-['Noto_Serif_JP'] text-[#e8e0d0] group-hover:text-[#c9a24c] transition-colors min-w-32 whitespace-nowrap">
                   <div className="flex items-center gap-3">
                     <input
                       type="checkbox"
