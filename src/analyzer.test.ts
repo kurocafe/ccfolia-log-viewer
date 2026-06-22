@@ -53,7 +53,34 @@ describe("analyzer の 1d100 合算", () => {
   })
 
   // === ここから下はご自身で書いてみる用のTODO ===
-  // test("96〜100 はファンブルになる", () => { ... })
-  // test("中間の出目（6〜95）は total にだけ加算される", () => { ... })
-  // test("1d100しか振っていないキャラも includeD100 時は集計対象になる", () => { ... })
+  test("96〜100 はファンブルになる", () => {
+    const entries = [entry({ command: 'CCB' })]
+    const rolls = [d100(95), d100(96), d100(100)]
+
+    const stats = analyzer(entries, rolls, true)
+
+    expect(stats[0].counts.fumble).toBe(2)
+  })
+
+  test("中間の出目（6〜95）は total にだけ加算される", () => {
+    const entries = [entry({ command: 'CCB' })]
+    const rolls = [d100(6), d100(95)]
+
+    const stats = analyzer(entries, rolls, true)
+
+    expect(stats[0].total).toBe(3) // CCB の1件と 1d100 の2件
+  })
+
+  test("1d100しか振っていないキャラも includeD100 時は集計対象になる", () => {
+    const entries: DiceRollEntry[] = [] // ログには出てこない
+    const rolls = [d100(1, "B"), d100(50, "B"), d100(100, "B")] // B というキャラが 1d100 を3回振っている
+
+    const stats = analyzer(entries, rolls, true)
+
+    expect(stats.length).toBe(1)
+    expect(stats[0].charName).toBe("B")
+    expect(stats[0].total).toBe(3)
+    expect(stats[0].counts.critical).toBe(1) // 出目1がクリティカル
+    expect(stats[0].counts.fumble).toBe(1) // 出目100がファンブル
+  })
 })
