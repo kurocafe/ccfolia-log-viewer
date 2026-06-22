@@ -14,6 +14,12 @@ export interface DiceRollEntry {
   baseTarget: number
 }
 
+// 技能値を持たない生の 1d100（出目だけ）
+export interface D100Roll {
+  charName: string
+  roll: number
+}
+
 export interface CharacterStats {
   charName: string
   total: number

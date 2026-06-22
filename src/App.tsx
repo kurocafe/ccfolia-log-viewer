@@ -1,25 +1,42 @@
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import { analyzer } from "./analyzer"
-import { parserLog } from "./parser"
+import { parserLog, parseD100Rolls } from "./parser"
 import StatsTable from "./components/statsTable"
-import type { DiceRollEntry, CharacterStats, GrowthResult } from "./types"
+import type { DiceRollEntry, CharacterStats, GrowthResult, D100Roll } from "./types"
 import { growthRoller } from "./growthRoller"
 import GrowthRollTable from "./components/growthRollTable"
 import { useTheme } from "./useTheme"
 import { COPY } from "./themeCopy"
 
+// 判定回数の上位層の平均をもとに、NPCとみなす合計回数のしきい値を求める
+function calcNpcThreshold(stats: CharacterStats[]) {
+  if (stats.length === 0) return 0
+  const totals = stats.map(s => s.total)
+  const sorted = [...totals].sort((a, b) => a - b)
+  const q3Index = Math.floor(sorted.length * 0.75)
+  const upperValues = sorted.slice(q3Index)
+  const upperMean = upperValues.reduce((a, b) => a + b, 0) / upperValues.length
+  return upperMean * 0.3
+}
+
 export default function App() {
-  const [stats, setStats] = useState<CharacterStats[]>([])
   const [growthResults, setGrowthResults] = useState<GrowthResult[]>([])
   const [selectedChar, setSelectedChar] = useState<string[]>([])
   const [entries, setEntries] = useState<DiceRollEntry[]>([])
+  const [d100Rolls, setD100Rolls] = useState<D100Roll[]>([])
   const [hasRolled, setHasRolled] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [isDragging, setIsDragging] = useState(false)
-  const [npcThreshold, setNpcThreshold] = useState<number>(0)
   const [excludeNpc, setExcludeNpc] = useState(false)
+  const [includeD100, setIncludeD100] = useState(false)
   const { theme, toggle } = useTheme()
   const copy = COPY[theme]
+
+  const stats = useMemo(
+    () => analyzer(entries, d100Rolls, includeD100),
+    [entries, d100Rolls, includeD100]
+  )
+  const npcThreshold = useMemo(() => calcNpcThreshold(stats), [stats])
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -43,23 +60,9 @@ export default function App() {
     reader.readAsText(file)
   }
 
-  const calcNpcThreshold = (stats: CharacterStats[]) => {
-    const totals = stats.map(s => s.total)
-    const sorted = [...totals].sort((a, b) => a - b)
-    const q3Index = Math.floor(sorted.length * 0.75)
-    const upperValues = sorted.slice(q3Index)
-    const upperMean = upperValues.reduce((a, b) => a + b, 0) / upperValues.length
-    return upperMean * 0.3
-  }
-
   const processHtmlContent = (html: string) => {
-    const parsedEntries = parserLog(html)
-    setEntries(parsedEntries)
-
-    const analyzedStats = analyzer(parsedEntries)
-    setStats(analyzedStats)
-
-    setNpcThreshold(calcNpcThreshold(analyzedStats))
+    setEntries(parserLog(html))
+    setD100Rolls(parseD100Rolls(html))
 
     setSelectedChar([])
     setHasRolled(false)
@@ -182,7 +185,16 @@ export default function App() {
 
         {stats.length > 0 && (
           <>
-            <div className="flex justify-end mb-2">
+            <div className="flex justify-end flex-wrap gap-x-5 gap-y-1 mb-2">
+              <label className="flex items-center gap-2 text-sm text-[var(--accent)] cursor-pointer font-[family-name:var(--font-body)]">
+                <input
+                  type="checkbox"
+                  checked={includeD100}
+                  onChange={(e) => setIncludeD100(e.target.checked)}
+                  className="accent-[var(--accent)]"
+                />
+                {copy.includeD100}
+              </label>
               <label className="flex items-center gap-2 text-sm text-[var(--accent)] cursor-pointer font-[family-name:var(--font-body)]">
                 <input
                   type="checkbox"
