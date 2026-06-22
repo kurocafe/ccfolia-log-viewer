@@ -1,30 +1,33 @@
 import { useState } from "react"
 import type { CharacterStats, ResultType } from "../types"
+import type { Theme } from "../useTheme"
+import { COPY } from "../themeCopy"
 
 interface Props {
   stats: CharacterStats[]
   selectedChar: string[]
   onToggle: (charName: string) => void
+  theme: Theme
 }
 
 type SortableKey = 'total' | 'successRate' | 'criticalRate' | 'fumbleRate'
 
-const RESULT_CONFIG: Record<ResultType, { label: string; color: string; bg: string }> = {
-  critical: { label: "クリティカル", color: "#fbbf24", bg: "rgba(251,191,36,0.12)" },
-  special: { label: "スペシャル", color: "#a78bfa", bg: "rgba(167,139,250,0.12)" },
-  hardSuccess: { label: "ハード成功", color: "#60a5fa", bg: "rgba(96,165,250,0.12)" },
-  success: { label: "成功", color: "#34d399", bg: "rgba(52,211,153,0.12)" },
-  failure: { label: "失敗", color: "#6b7280", bg: "rgba(107,114,128,0.12)" },
-  fumble: { label: "ファンブル", color: "#f87171", bg: "rgba(248,113,113,0.12)" },
+const RESULT_CONFIG: Record<ResultType, { label: string; varName: string }> = {
+  critical: { label: "クリティカル", varName: "critical" },
+  special: { label: "スペシャル", varName: "special" },
+  hardSuccess: { label: "ハード成功", varName: "hard" },
+  success: { label: "成功", varName: "success" },
+  failure: { label: "失敗", varName: "failure" },
+  fumble: { label: "ファンブル", varName: "fumble" },
 }
 
 function RateBar({ value, color }: { value: number; color: string }) {
   return (
     <div className="flex items-center gap-2">
-      <span className="font-['JetBrains_Mono'] text-sm w-14 text-right" style={{ color }}>
+      <span className="font-[family-name:var(--font-num)] font-medium text-sm w-14 text-right" style={{ color }}>
         {(value * 100).toFixed(1)}%
       </span>
-      <div className="w-16 h-1 bg-[#1e2030] rounded-full overflow-hidden">
+      <div className="w-16 h-1.5 bg-[var(--rate-track)] rounded-full overflow-hidden">
         <div
           className="h-full rounded-full transition-all"
           style={{ width: `${Math.min(value * 100, 100)}%`, backgroundColor: color }}
@@ -34,9 +37,10 @@ function RateBar({ value, color }: { value: number; color: string }) {
   )
 }
 
-export default function StatsTable({ stats, selectedChar, onToggle }: Props) {
+export default function StatsTable({ stats, selectedChar, onToggle, theme }: Props) {
   const [sortKey, setSortKey] = useState<SortableKey | null>(null)
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('asc')
+  const copy = COPY[theme]
 
   const sorted = [...stats].sort((a, b) => {
     if (sortKey === null) return 0
@@ -56,26 +60,26 @@ export default function StatsTable({ stats, selectedChar, onToggle }: Props) {
   }
 
   return (
-    <div className="border border-[#2a2a3e] bg-[#0d0f1a]">
-      <div className="flex items-center gap-3 px-5 py-3 border-b border-[#2a2a3e]">
-        <div className="w-1.5 h-5 bg-[#c9a24c]" />
-        <span className="font-['Cinzel'] text-sm tracking-[0.2em] text-[#c9a24c] uppercase">
-          判定記録
+    <div className="border border-[var(--border)] bg-[var(--surface)] rounded-[var(--radius-card)] shadow-[var(--shadow-card)] overflow-hidden">
+      <div className="flex items-center gap-3 px-5 py-4 border-b border-[var(--border)]">
+        <div className="w-1.5 h-5 bg-[var(--accent)] rounded-[var(--radius-pill)]" />
+        <span className="font-[family-name:var(--font-heading)] text-base text-[var(--text-heading)]">
+          {copy.statsTitle}
         </span>
-        <span className="ml-auto font-['JetBrains_Mono'] text-xs text-[#4a4a6a]">
-          {stats.length} characters
+        <span className="ml-auto font-[family-name:var(--font-num)] text-xs text-[var(--text-muted)]">
+          {stats.length} {copy.countSuffix}
         </span>
       </div>
 
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-[#2a2a3e]">
-              <th className="text-left px-5 py-3 font-['Cinzel'] text-xs tracking-[0.15em] text-[#6b6888] uppercase">
-                探索者
+            <tr className="border-b border-[var(--border)]">
+              <th className="text-left px-5 py-3 font-[family-name:var(--font-heading)] text-xs text-[var(--text-muted)]">
+                {copy.explorer}
               </th>
               <th
-                className="px-3 py-3 font-['Cinzel'] text-xs tracking-widest text-[#6b6888] uppercase text-center cursor-pointer hover:text-[#9e9caf] transition-colors"
+                className="px-3 py-3 font-[family-name:var(--font-heading)] text-xs text-[var(--text-muted)] text-center cursor-pointer hover:text-[var(--text-heading)] transition-colors"
                 onClick={() => handleSort('total')}
               >
                 合計
@@ -84,26 +88,26 @@ export default function StatsTable({ stats, selectedChar, onToggle }: Props) {
               {Object.entries(RESULT_CONFIG).map(([key, cfg]) => (
                 <th
                   key={key}
-                  className="px-3 py-3 font-['Cinzel'] text-xs tracking-widest uppercase text-center"
-                  style={{ color: cfg.color + "99" }}
+                  className="px-3 py-3 font-[family-name:var(--font-heading)] text-xs text-center"
+                  style={{ color: `var(--c-${cfg.varName})` }}
                 >
                   {cfg.label}
                 </th>
               ))}
               <th
-                className="px-4 py-3 font-['Cinzel'] text-xs tracking-widest text-[#34d399aa] uppercase text-center cursor-pointer hover:text-[#32d399] transition-colors"
+                className="px-4 py-3 font-[family-name:var(--font-heading)] text-xs text-[var(--c-success)] text-center cursor-pointer hover:opacity-70 transition-opacity"
                 onClick={() => handleSort('successRate')}
               >
                 成功率
                 {sortKey === 'successRate' && (sortDir === 'asc' ? ' ▲' : ' ▼')}
               </th>
-              <th className="px-4 py-3 font-['Cinzel'] text-xs tracking-widest text-[#fbbf24aa] uppercase text-center cursor-pointer hover:text-[#fbbf24] transition-colors"
+              <th className="px-4 py-3 font-[family-name:var(--font-heading)] text-xs text-[var(--c-critical)] text-center cursor-pointer hover:opacity-70 transition-opacity"
                 onClick={() => handleSort('criticalRate')}
               >
                 クリティカル率
                 {sortKey === 'criticalRate' && (sortDir === 'asc' ? ' ▲' : ' ▼')}
               </th>
-              <th className="px-4 py-3 font-['Cinzel'] text-xs tracking-widest text-[#f87171aa] uppercase text-center cursor-pointer hover:text-[#f87171] transition-colors"
+              <th className="px-4 py-3 font-[family-name:var(--font-heading)] text-xs text-[var(--c-fumble)] text-center cursor-pointer hover:opacity-70 transition-opacity"
                 onClick={() => handleSort('fumbleRate')}
               >
                 ファンブル率
@@ -115,23 +119,23 @@ export default function StatsTable({ stats, selectedChar, onToggle }: Props) {
             {sorted.map((stat, i) => (
               <tr
                 key={stat.charName}
-                className="border-b border-[#1e2030] hover:bg-[#c9a24c]/5 transition-colors duration-150 group"
+                className="border-b border-[var(--border-soft)] last:border-b-0 hover:bg-[var(--surface-hover)] transition-colors duration-150 group"
               >
-                <td className="px-5 py-3 font-['Noto_Serif_JP'] text-[#e8e0d0] group-hover:text-[#c9a24c] transition-colors min-w-32 whitespace-nowrap">
+                <td className="px-5 py-3 font-[family-name:var(--font-body)] text-[var(--text)] group-hover:text-[var(--accent)] transition-colors min-w-32 whitespace-nowrap">
                   <div className="flex items-center gap-3">
                     <input
                       type="checkbox"
                       checked={selectedChar.includes(stat.charName)}
                       onChange={() => onToggle(stat.charName)}
-                      className="w-3.5 h-3.5 accent-[#c9a24c] cursor-pointer"
+                      className="w-3.5 h-3.5 accent-[var(--accent)] cursor-pointer"
                     />
-                    <span className="text-[#4a4a6a] font-['JetBrains_Mono'] text-xs">
+                    <span className="text-[var(--text-index)] font-[family-name:var(--font-num)] text-xs">
                       {String(i + 1).padStart(2, "0")}
                     </span>
-                    {stat.charName || <span className="text-[#4a4a6a] italic">unknown</span>}
+                    {stat.charName || <span className="text-[var(--text-muted)] italic">unknown</span>}
                   </div>
                 </td>
-                <td className="px-3 py-3 text-center font-['JetBrains_Mono'] text-[#8888aa]">
+                <td className="px-3 py-3 text-center font-[family-name:var(--font-num)] text-[var(--text-num)]">
                   {stat.total}
                 </td>
                 {(Object.keys(RESULT_CONFIG) as ResultType[]).map((key) => {
@@ -141,25 +145,25 @@ export default function StatsTable({ stats, selectedChar, onToggle }: Props) {
                     <td key={key} className="px-3 py-3 text-center">
                       {count > 0 ? (
                         <span
-                          className="inline-block px-2 py-0.5 rounded text-xs font-['JetBrains_Mono'] font-medium"
-                          style={{ color: cfg.color, backgroundColor: cfg.bg }}
+                          className="inline-block px-2 py-0.5 rounded-[var(--radius-pill)] text-xs font-[family-name:var(--font-num)] font-medium"
+                          style={{ color: `var(--c-${cfg.varName})`, backgroundColor: `var(--c-${cfg.varName}-bg)` }}
                         >
                           {count}
                         </span>
                       ) : (
-                        <span className="text-[#2a2a3e] font-['JetBrains_Mono'] text-xs">—</span>
+                        <span className="text-[var(--text-faint)] font-[family-name:var(--font-num)] text-xs">—</span>
                       )}
                     </td>
                   )
                 })}
                 <td className="px-4 py-3">
-                  <RateBar value={stat.successRate} color="#34d399" />
+                  <RateBar value={stat.successRate} color="var(--c-success)" />
                 </td>
                 <td className="px-4 py-3">
-                  <RateBar value={stat.criticalRate} color="#fbbf24" />
+                  <RateBar value={stat.criticalRate} color="var(--c-critical)" />
                 </td>
                 <td className="px-4 py-3">
-                  <RateBar value={stat.fumbleRate} color="#f87171" />
+                  <RateBar value={stat.fumbleRate} color="var(--c-fumble)" />
                 </td>
               </tr>
             ))}
