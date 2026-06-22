@@ -32,7 +32,7 @@ export const COPY: Record<Theme, ThemeCopy> = {
     explorer: "探索者",
     countSuffix: "characters",
     growthTitle: "成長記録",
-    toggleLabel: "🌸 ゆるふわ",
+    toggleLabel: "🌸",
   },
   soft: {
     eyebrow: "✿ ccfolia dice log ✿",
@@ -48,6 +48,6 @@ export const COPY: Record<Theme, ThemeCopy> = {
     explorer: "たんさくしゃ",
     countSuffix: "にん",
     growthTitle: "せいちょう記録",
-    toggleLabel: "🌙 かっこいい",
+    toggleLabel: "🌙",
   },
 }

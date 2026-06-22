@@ -132,7 +132,7 @@ export default function App() {
         <div className="flex justify-end mb-2">
           <button
             onClick={toggle}
-            className="rounded-[var(--radius-btn)] border bg-[var(--btn-bg)] text-[var(--btn-text)] border-[var(--btn-border)] hover:bg-[var(--btn-bg-hover)] hover:border-[var(--btn-border-hover)] shadow-[var(--btn-shadow)] transition-all duration-300 px-4 py-1.5 text-sm font-[family-name:var(--font-body)]"
+            className="rounded-full border bg-[var(--btn-bg)] text-[var(--btn-text)] border-[var(--btn-border)] hover:bg-[var(--btn-bg-hover)] hover:border-[var(--btn-border-hover)] shadow-[var(--btn-shadow)] transition-all duration-300 w-14 h-9 flex items-center justify-center text-base"
           >
             {copy.toggleLabel}
           </button>
@@ -170,8 +170,8 @@ export default function App() {
             <div
               className={`border rounded-[var(--radius-card)] min-w-80 text-center px-8 py-5 transition-all duration-300 font-[family-name:var(--font-body)] text-base shadow-[var(--shadow-card)]
               ${isDragging
-                ? 'border-[var(--upload-border-active)] bg-[var(--upload-bg-active)]'
-                : 'border-[var(--upload-border)] bg-[var(--upload-bg)]'}
+                  ? 'border-[var(--upload-border-active)] bg-[var(--upload-bg-active)]'
+                  : 'border-[var(--upload-border)] bg-[var(--upload-bg)]'}
               hover:border-[var(--upload-border-active)] hover:bg-[var(--upload-bg-hover)] text-[var(--upload-text)]`}>
               {isDragging ? copy.uploadDrag : copy.uploadIdle}
             </div>
