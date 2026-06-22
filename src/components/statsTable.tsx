@@ -74,7 +74,7 @@ export default function StatsTable({ stats, selectedChar, onToggle, theme }: Pro
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-[var(--border)]">
+            <tr className="border-b border-[var(--border)] whitespace-nowrap">
               <th className="text-left px-5 py-3 font-[family-name:var(--font-heading)] text-xs text-[var(--text-muted)]">
                 {copy.explorer}
               </th>
