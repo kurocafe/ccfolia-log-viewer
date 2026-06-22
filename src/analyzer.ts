@@ -29,6 +29,13 @@ export function analyzer(
 
   const stats: CharacterStats[] = []
 
+  // 生の 1d100 単体では CC/CCB を判別できないため、同じログ内の CC/CCB
+  // エントリの多数派からシナリオのコマンド種別を推定する（混在しない前提）。
+  // CC（7版）はクリティカルが出目1のみ、CCB（6版）は 1〜5。
+  const ccCount = entries.filter(e => e.command === 'CC').length
+  const isCCScenario = ccCount > entries.length - ccCount
+  const d100CriticalMax = isCCScenario ? 1 : 5
+
   for (const charName of charNames) {
     const counts: Record<ResultType, number> = {
       critical: 0,
@@ -52,13 +59,13 @@ export function analyzer(
     let total = charEntries.length
 
     // 生の 1d100 は技能値が無いため成否を判定できない。
-    // CoC6版の慣例に倣い 1〜5 をクリティカル、96〜100 をファンブルとし、
+    // クリティカルは CC=1 のみ / CCB=1〜5、ファンブルは 96〜100 とし、
     // 間の出目は合計回数にだけ加算する（成否カウントには入れない）
     if (includeD100) {
       const rolls = d100ByChar.get(charName) ?? []
       for (const r of rolls) {
         total++
-        if (r.roll <= 5) counts.critical++
+        if (r.roll <= d100CriticalMax) counts.critical++
         else if (r.roll >= 96) counts.fumble++
       }
     }
