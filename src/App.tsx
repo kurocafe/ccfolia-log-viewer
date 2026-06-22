@@ -5,6 +5,8 @@ import StatsTable from "./components/statsTable"
 import type { DiceRollEntry, CharacterStats, GrowthResult } from "./types"
 import { growthRoller } from "./growthRoller"
 import GrowthRollTable from "./components/growthRollTable"
+import { useTheme } from "./useTheme"
+import { COPY } from "./themeCopy"
 
 export default function App() {
   const [stats, setStats] = useState<CharacterStats[]>([])
@@ -16,6 +18,8 @@ export default function App() {
   const [isDragging, setIsDragging] = useState(false)
   const [npcThreshold, setNpcThreshold] = useState<number>(0)
   const [excludeNpc, setExcludeNpc] = useState(false)
+  const { theme, toggle } = useTheme()
+  const copy = COPY[theme]
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -120,16 +124,31 @@ export default function App() {
     : stats
 
   return (
-    <div className="min-h-screen bg-[#07080f] text-[#e8e0d0] px-6 py-10">
+    <div className="min-h-screen px-6 py-10 text-[var(--text)] font-[family-name:var(--font-body)]">
       <div className="w-full">
+        <div className="flex justify-end mb-2">
+          <button
+            onClick={toggle}
+            className="rounded-[var(--radius-btn)] border bg-[var(--btn-bg)] text-[var(--btn-text)] border-[var(--btn-border)] hover:bg-[var(--btn-bg-hover)] hover:border-[var(--btn-border-hover)] shadow-[var(--btn-shadow)] transition-all duration-300 px-4 py-1.5 text-sm font-[family-name:var(--font-body)]"
+          >
+            {copy.toggleLabel}
+          </button>
+        </div>
+
         <header className="text-center mb-10">
-          <div className="text-[#c9a24c] text-xs tracking-[0.4em] mb-3 font-['Cinzel']">
-            ✦ ARCANE CHRONICLE ✦
+          <div className="text-[var(--accent)] text-sm mb-2 font-[family-name:var(--font-accent)] tracking-[0.3em]">
+            {copy.eyebrow}
           </div>
-          <h1 className="text-3xl font-['Cinzel'] font-semibold text-[#e8e0d0] tracking-widest mb-2">
-            CCFOLIA LOG VIEWER
+          <h1 className="text-4xl font-[family-name:var(--font-heading)] text-[var(--text-heading)] tracking-wide mb-2">
+            {copy.title}
           </h1>
-          <div className="w-48 h-px bg-linear-to-r from-transparent via-[#c9a24c] to-transparent mx-auto" />
+          {copy.subtitle ? (
+            <p className="text-xs text-[var(--text-muted)] font-[family-name:var(--font-body)]">
+              {copy.subtitle}
+            </p>
+          ) : (
+            <div className="w-48 h-px bg-linear-to-r from-transparent via-[var(--accent)] to-transparent mx-auto" />
+          )}
         </header>
 
         <div
@@ -146,14 +165,16 @@ export default function App() {
               className="hidden"
             />
             <div
-              className={`border min-w-80 text-center
-              ${isDragging ? 'border-[#c9a24c] bg-[#c9a24c]/10' : 'border-[#c9a24c]/40 bg-[#0d0f1a]'} 
-              hover:border-[#c9a24c] hover:bg-[#c9a24c]/5 transition-all duration-300 px-8 py-3 font-['Cinzel'] text-sm tracking-[0.25em] text-[#c9a24c] uppercase`}>
-              {isDragging ? '⊕ ログファイルをドロップ (.html)' : '⊕ ログファイルを選んでね (.html)'}
+              className={`border rounded-[var(--radius-card)] min-w-80 text-center px-8 py-5 transition-all duration-300 font-[family-name:var(--font-body)] text-base shadow-[var(--shadow-card)]
+              ${isDragging
+                ? 'border-[var(--upload-border-active)] bg-[var(--upload-bg-active)]'
+                : 'border-[var(--upload-border)] bg-[var(--upload-bg)]'}
+              hover:border-[var(--upload-border-active)] hover:bg-[var(--upload-bg-hover)] text-[var(--upload-text)]`}>
+              {isDragging ? copy.uploadDrag : copy.uploadIdle}
             </div>
           </label>
           {errorMessage && (
-            <p className="text-center text-[#f87171] text-sm mt-4">
+            <p className="text-center text-[var(--c-error)] text-sm mt-4 font-[family-name:var(--font-body)]">
               {errorMessage}
             </p>
           )}
@@ -162,35 +183,35 @@ export default function App() {
         {stats.length > 0 && (
           <>
             <div className="flex justify-end mb-2">
-              <label className="flex items-center gap-2 text-sm text-[#c9a24c] cursor-pointer">
+              <label className="flex items-center gap-2 text-sm text-[var(--accent)] cursor-pointer font-[family-name:var(--font-body)]">
                 <input
                   type="checkbox"
                   checked={excludeNpc}
                   onChange={(e) => setExcludeNpc(e.target.checked)}
-                  className="accent-[#c9a24c]"
+                  className="accent-[var(--accent)]"
                 />
-                NPCとおもわしきキャラクターを除外する
+                {copy.excludeNpc}
               </label>
             </div>
 
-            <StatsTable stats={displayStats} selectedChar={selectedChar} onToggle={toggleChar} />
+            <StatsTable stats={displayStats} selectedChar={selectedChar} onToggle={toggleChar} theme={theme} />
             <div className="flex justify-center mt-6">
               <div className="flex flex-col items-center gap-2">
                 <button
                   onClick={handleGrowthRoll}
                   disabled={selectedChar.length === 0 || hasRolled}
-                  className="border border-[#c9a24c]/40 hover:border-[#c9a24c] bg-[#0d0f1a] hover:bg-[#c9a24c]/5 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300 px-8 py-3 font-['Cinzel'] text-sm tracking-[0.25em] text-[#c9a24c] uppercase"
+                  className="rounded-[var(--radius-btn)] border bg-[var(--btn-bg)] text-[var(--btn-text)] border-[var(--btn-border)] hover:bg-[var(--btn-bg-hover)] hover:border-[var(--btn-border-hover)] shadow-[var(--btn-shadow)] disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-300 px-10 py-3 font-[family-name:var(--font-heading)] text-base"
                 >
-                  ✦ 成長ロール実行
+                  {copy.growthButton}
                 </button>
-                <p className="text-[#4a4a6a] text-xs font-['Noto_Serif_JP']">
-                  ※ 初期値成功による成長判定は含まれていません
+                <p className="text-[var(--text-muted)] text-xs font-[family-name:var(--font-body)]">
+                  {copy.growthNote}
                 </p>
               </div>
             </div>
             {growthResults.length > 0 && (
               <div className="mt-6">
-                <GrowthRollTable growthResults={growthResults} />
+                <GrowthRollTable growthResults={growthResults} theme={theme} />
               </div>
             )}
           </>

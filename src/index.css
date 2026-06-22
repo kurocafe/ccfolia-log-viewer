@@ -1,56 +1,143 @@
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Noto+Serif+JP:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Noto+Serif+JP:wght@400;500&family=JetBrains+Mono:wght@400;500&family=Yomogi&family=Klee+One:wght@400;600&family=Caveat:wght@500;600;700&family=M+PLUS+Rounded+1c:wght@400;500;700&display=swap');
 @import "tailwindcss";
 
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
-
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
-
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
-  font-synthesis: none;
+  color-scheme: light;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
+  /* ===== cool（元デザイン・デフォルト） ===== */
+  --bg: #07080f;
+  --bg-gradient: linear-gradient(to bottom right, #fdf2f8, #f6f0fb, #eef5fc);
+  --bg-gradient-opacity: 0;
+  --text: #e8e0d0;
+  --text-heading: #e8e0d0;
+  --text-muted: #6b6888;
+  --text-faint: #2a2a3e;
+  --text-index: #4a4a6a;
+  --text-num: #8888aa;
+
+  --surface: #0d0f1a;
+  --surface-hover: rgba(201, 162, 76, 0.05);
+  --border: #2a2a3e;
+  --border-soft: #1e2030;
+  --accent: #c9a24c;
+  --rate-track: #1e2030;
+
+  --radius-card: 0px;
+  --radius-pill: 4px;
+  --shadow-card: none;
+
+  --upload-bg: #0d0f1a;
+  --upload-border: rgba(201, 162, 76, 0.4);
+  --upload-text: #c9a24c;
+  --upload-bg-active: rgba(201, 162, 76, 0.1);
+  --upload-border-active: #c9a24c;
+  --upload-bg-hover: rgba(201, 162, 76, 0.05);
+
+  --btn-bg: #0d0f1a;
+  --btn-text: #c9a24c;
+  --btn-border: rgba(201, 162, 76, 0.4);
+  --btn-border-hover: #c9a24c;
+  --btn-bg-hover: rgba(201, 162, 76, 0.05);
+  --btn-shadow: 0 0 #0000;
+  --radius-btn: 0px;
+
+  --font-heading: 'Cinzel', serif;
+  --font-body: 'Noto Serif JP', serif;
+  --font-num: 'JetBrains Mono', monospace;
+  --font-accent: 'Cinzel', serif;
+
+  --c-critical: #fbbf24;
+  --c-critical-bg: rgba(251, 191, 36, 0.12);
+  --c-special: #a78bfa;
+  --c-special-bg: rgba(167, 139, 250, 0.12);
+  --c-hard: #60a5fa;
+  --c-hard-bg: rgba(96, 165, 250, 0.12);
+  --c-success: #34d399;
+  --c-success-bg: rgba(52, 211, 153, 0.12);
+  --c-failure: #6b7280;
+  --c-failure-bg: rgba(107, 114, 128, 0.12);
+  --c-fumble: #f87171;
+  --c-fumble-bg: rgba(248, 113, 113, 0.12);
+  --c-error: #f87171;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
+[data-theme="soft"] {
+  /* ===== ゆるふわ ===== */
+  --bg: #fdf2f8;
+  --bg-gradient: linear-gradient(to bottom right, #fdf2f8, #f6f0fb, #eef5fc);
+  --bg-gradient-opacity: 1;
+  --text: #8a7e98;
+  --text-heading: #7a6b8a;
+  --text-muted: #a89cb4;
+  --text-faint: #ddd2e4;
+  --text-index: #cdc2d6;
+  --text-num: #9a8fa8;
 
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
+  --surface: #ffffff;
+  --surface-hover: #fdf4f9;
+  --border: #f3e0ec;
+  --border-soft: #f7eef4;
+  --accent: #f7a3c1;
+  --rate-track: #f1e7f3;
+
+  --radius-card: 1.5rem;
+  --radius-pill: 9999px;
+  --shadow-card: 0 4px 24px rgba(247, 163, 193, 0.12);
+
+  --upload-bg: #ffffff;
+  --upload-border: #f3c6dc;
+  --upload-text: #c98aa8;
+  --upload-bg-active: #fce4ef;
+  --upload-border-active: #f7a3c1;
+  --upload-bg-hover: #fdeef5;
+
+  --btn-bg: #f7a3c1;
+  --btn-text: #ffffff;
+  --btn-border: transparent;
+  --btn-border-hover: transparent;
+  --btn-bg-hover: #f48fb5;
+  --btn-shadow: 0 4px 16px rgba(247, 163, 193, 0.4);
+  --radius-btn: 9999px;
+
+  --font-heading: 'Yomogi', sans-serif;
+  --font-body: 'Klee One', sans-serif;
+  --font-num: 'M PLUS Rounded 1c', sans-serif;
+  --font-accent: 'Caveat', cursive;
+
+  --c-critical: #e8a13a;
+  --c-critical-bg: rgba(232, 161, 58, 0.14);
+  --c-special: #b48ee8;
+  --c-special-bg: rgba(180, 142, 232, 0.14);
+  --c-hard: #5fb0dd;
+  --c-hard-bg: rgba(95, 176, 221, 0.14);
+  --c-success: #45bf95;
+  --c-success-bg: rgba(69, 191, 149, 0.14);
+  --c-failure: #a89cb4;
+  --c-failure-bg: rgba(168, 156, 180, 0.14);
+  --c-fumble: #f0859b;
+  --c-fumble-bg: rgba(240, 133, 155, 0.14);
+  --c-error: #ef7a92;
+}
+
+body {
+  margin: 0;
+  background-color: var(--bg);
+  transition: background-color 0.4s ease;
+}
+
+/* グラデーション層。テーマ切替時に opacity でクロスフェードする */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: var(--bg-gradient);
+  opacity: var(--bg-gradient-opacity);
+  transition: opacity 0.4s ease;
 }
 
 #root {
@@ -61,50 +148,14 @@
   box-sizing: border-box;
 }
 
-body {
-  margin: 0;
-}
-
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
-}
-
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
+/* テーマ切替を滑らかに。Tailwind の transition ユーティリティが
+   ある要素はそちらが優先されるため hover などには影響しない */
+@layer base {
+  *,
+  *::before,
+  *::after {
+    transition-property: background-color, border-color, color, box-shadow, fill, stroke;
+    transition-duration: 0.4s;
+    transition-timing-function: ease;
   }
-}
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
-}
-p {
-  margin: 0;
-}
-
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
-}
-
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
 }
