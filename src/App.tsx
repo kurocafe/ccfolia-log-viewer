@@ -120,8 +120,8 @@ export default function App() {
     : stats
 
   return (
-    <div className="min-h-screen bg-[#07080f] text-[#e8e0d0] px-4 py-10">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen bg-[#07080f] text-[#e8e0d0] px-6 py-10">
+      <div className="w-full">
         <header className="text-center mb-10">
           <div className="text-[#c9a24c] text-xs tracking-[0.4em] mb-3 font-['Cinzel']">
             ✦ ARCANE CHRONICLE ✦
