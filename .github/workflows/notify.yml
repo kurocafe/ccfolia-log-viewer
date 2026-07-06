@@ -19,6 +19,6 @@ jobs:
           PR_TITLE: ${{ github.event.pull_request.title }}
           PR_URL: ${{ github.event.pull_request.html_url }}
         run: |
-          CONTENT=$(printf '🎉 %s をマージしました（%s）\n%s' "$PR_TITLE" "$ACTOR" "$PR_URL")
+          CONTENT=$(printf '%s' "$PR_TITLE")
           jq -n --arg content "$CONTENT" '{content: $content}' \
             | curl -H "Content-Type: application/json" -d @- "$DISCORD_WEBHOOK"
