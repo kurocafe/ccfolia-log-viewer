@@ -1,22 +1,24 @@
 name: Discord Notify
 
 on:
-  push:
+  pull_request:
     branches:
       - main
+    types:
+      - closed
 
 jobs:
   notify:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
-      - name: Notify on Push
+      - name: Notify on Merge
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-          ACTOR: ${{ github.actor }}
-          REPO: ${{ github.repository }}
-          COMMIT_MSG: ${{ github.event.head_commit.message }}
-          COMMIT_URL: ${{ github.event.head_commit.url }}
+          ACTOR: ${{ github.event.pull_request.user.login }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
         run: |
-          CONTENT=$(printf '🚀 %s が %s にpushしました\n%s\n%s' "$ACTOR" "$REPO" "$COMMIT_MSG" "$COMMIT_URL")
+          CONTENT=$(printf '🎉 %s をマージしました（%s）\n%s' "$PR_TITLE" "$ACTOR" "$PR_URL")
           jq -n --arg content "$CONTENT" '{content: $content}' \
             | curl -H "Content-Type: application/json" -d @- "$DISCORD_WEBHOOK"
