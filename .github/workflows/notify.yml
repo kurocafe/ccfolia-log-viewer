@@ -15,10 +15,10 @@ jobs:
       - name: Notify on Merge
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-          ACTOR: ${{ github.event.pull_request.user.login }}
+          # ACTOR: ${{ github.event.pull_request.user.login }}
           PR_TITLE: ${{ github.event.pull_request.title }}
-          PR_URL: ${{ github.event.pull_request.html_url }}
+          # PR_URL: ${{ github.event.pull_request.html_url }}
         run: |
-          CONTENT=$(printf '%s' "$PR_TITLE")
+          CONTENT=$(printf '更新されました！\n%s' "$PR_TITLE")
           jq -n --arg content "$CONTENT" '{content: $content}' \
             | curl -H "Content-Type: application/json" -d @- "$DISCORD_WEBHOOK"
