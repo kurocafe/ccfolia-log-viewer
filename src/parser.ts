@@ -37,13 +37,7 @@ export function parserLog(html: string): DiceRollEntry[] {
     if (spans.length < 3) continue
     const charName = spans[1].textContent?.trim().replace(/\s+/g, ' ') ?? ''
     const commandText = spans[2].textContent?.trim() ?? ''
-    if (!commandText.startsWith('CC<=') && !commandText.startsWith('CCB<=')) {
-      continue
-    }
-    const parts = commandText.split('＞')
-    if (parts.length < 2) continue
-    const resultLabel = parts[parts.length - 1].trim()
-    if (!isNaN(Number(resultLabel))) {
+    if (!/^(?:[xX]\d+\s+)?CCB?<=/.test(commandText)) {
       continue
     }
     const command = commandText.startsWith('CCB') ? 'CCB' : 'CC'
@@ -51,25 +45,30 @@ export function parserLog(html: string): DiceRollEntry[] {
     const skill = skillMatch?.[1]
     const targetMatch = commandText.match(/1D100<=(\d+)/)
     const target = targetMatch?.[1]
-    const roll = parts[parts.length - 2].trim()
     const baseTargetMatch = commandText.match(/CC[B]?<=(\d+)/)
     const baseTarget = baseTargetMatch?.[1]
 
-    if (!skill || !target || !baseTarget || isNaN(Number(roll)
-    )) continue
+    if (!skill || !target || !baseTarget)
+      continue
 
-    const result = mapResultType(resultLabel)
-    if (result === null) continue
+    for (const block of commandText.split(/#\d+/)) {
+      const segs = block.split('＞')
+      if (segs.length < 2) continue
+      const roll = Number(segs[segs.length - 2].trim())
+      if (isNaN(roll)) continue
+      const result = mapResultType(segs[segs.length - 1].trim())
+      if (result === null) continue
 
-    entries.push({
-      charName,
-      command,
-      skill: skill ?? '',
-      target: Number(target),
-      roll: Number(roll),
-      result,
-      baseTarget: Number(baseTarget)
-    })
+      entries.push({
+        charName,
+        command,
+        skill: skill ?? '',
+        target: Number(target),
+        roll: Number(roll),
+        result,
+        baseTarget: Number(baseTarget)
+      })
+    }
   }
 
   return entries
