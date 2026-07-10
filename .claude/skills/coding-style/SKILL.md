@@ -2,28 +2,19 @@
 name: coding-style
 description: プロジェクトのコーディングスタイルガイドライン。コードを書く・レビューするときにこのスキルを参照してください。
 user-invocable: false
-# allowed-tools:
-#   - "Read"
-#   - "Grep"
-# model: sonnet
-# context: fork        # 独立したサブエージェントコンテキストで実行する場合
-# agent: general-purpose
 ---
 
 # コーディングスタイルガイド
 
-プロジェクト固有のコーディング規約を定義します。
-以下は TypeScript / React / Python / Go / Ruby / Java / C の**模範デフォルト**です。
-プロジェクトの慣習と食い違う場合はプロジェクト側に合わせて書き換えてください。
-
-> **プロジェクト開始時**: 使わない言語のセクションは削除してください。
-> スキルは読み込まれるたびに全文がコンテキストに入るため、短いほど効きます。
+このプロジェクト（Vite + React + TypeScript + Tailwind CSS）のコーディング規約です。
+スキルは読み込まれるたびに全文がコンテキストに入るため、短く保ちます。
+プロジェクトの慣習と食い違う場合は、このガイドより既存コードのパターンを優先してください。
 
 ## 基本原則
 
 - **明快さ優先**: 賢いコードより読みやすいコードを書く
 - **最小限の複雑さ**: 現在の要件に必要な分だけ実装する
-- **一貫性**: 迷ったら既存コードのパターンに従う（このガイドより既存の慣習を優先）
+- **一貫性**: 迷ったら既存コードのパターンに従う
 
 ## 命名規則 — TypeScript / React
 
@@ -58,56 +49,10 @@ function useDiceLog() {}
 - それ以外: `dice-parser.ts`（kebab-case）
 - テスト: 対象と同名 + `.test.ts(x)`（例: `dice-parser.test.ts`）
 
-## 命名規則 — Python
-
-```python
-# 変数・関数: snake_case。関数は動詞で始める
-user_name = "..."
-def fetch_user(): ...
-
-# クラス: PascalCase / 定数: UPPER_SNAKE_CASE
-class UserService: ...
-MAX_RETRY_COUNT = 3
-
-# モジュール内部専用: 先頭アンダースコア
-def _parse_line(): ...
-```
-
-## 命名規則 — Ruby
-
-RuboCop の標準ルールに従う。
-
-```ruby
-# 変数・メソッド: snake_case / クラス・モジュール: PascalCase / 定数: SCREAMING_SNAKE_CASE
-user_name = "..."
-def fetch_user; end
-class UserService; end
-MAX_RETRY_COUNT = 3
-
-# 真偽値を返すメソッドは ? で終える / 破壊的・危険なメソッドは ! で終える
-def active?; end
-def save!; end
-
-# ファイル名: クラス名に対応する snake_case（UserService → user_service.rb）
-```
-
-**Rails の場合**: 命名はスタイルではなく動作を決める（自動ロード・自動マッピングの前提）。
-
-```ruby
-# モデル: 単数形クラス ⇔ テーブルは複数形（app/models/user.rb）
-class User < ApplicationRecord; end          # → users テーブル
-
-# コントローラ: 複数形 + Controller（app/controllers/users_controller.rb）
-class UsersController < ApplicationController; end
-
-# 外部キー: 参照先モデル名_id（user_id）。アソシエーションが自動解決される
-# ファイルパスとクラス名の対応を崩さない（崩すと Zeitwerk のロードが失敗する）
-```
-
 ## 関数
 
 - 1関数1責務を守る
-- 引数は3つ以内を目安にする（超える場合はオブジェクト/辞書にまとめる）
+- 引数は3つ以内を目安にする（超える場合はオブジェクトにまとめる）
 - 早期リターンを優先し、ネストは3段以内に抑える
 
 ```ts
@@ -146,7 +91,7 @@ try {
 
 ## import 順序（TypeScript）
 
-1. 外部ライブラリ（react, next, ...）
+1. 外部ライブラリ（react, ...）
 2. プロジェクト内の絶対パス（`@/...`）
 3. 相対パス（`./`, `../`）
 
