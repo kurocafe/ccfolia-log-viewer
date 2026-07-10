@@ -1,6 +1,6 @@
 ---
 description: 変更内容を分析してconventional commits形式でコミットを作成する
-# argument-hint: "[コミットの補足情報]"
+argument-hint: "[コミットの補足情報]"
 # model: haiku
 ---
 
