@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
-import { fetchLogs } from "./api/client";
+import { fetchLogs, postLog } from "./api/client";
 import type { StoredLog } from "./types";
 import { parseD100Rolls, parserLog } from "./parser";
 import LogAnalysisView from "./components/LogAnalysisView";
 import type { Theme } from "./useTheme";
+import { readFileAsText } from "./readFileAsText";
 
 type View =
   | { type: 'list' }
@@ -28,6 +29,8 @@ function groupByScenario(logs: StoredLog[]): Map<string, StoredLog[]> {
 export default function Dashboard({ theme }: Props) {
   const [logs, setLogs] = useState<StoredLog[]>([])
   const [view, setView] = useState<View>({ type: 'list' })
+  const [password, setPassword] = useState<string>('')
+  const [uploadError, setUploadError] = useState<string | null>(null)
 
   useEffect(() => {
     fetchLogs().then(setLogs)
@@ -59,6 +62,29 @@ export default function Dashboard({ theme }: Props) {
     }
   }, [view, logs])
 
+  async function computeHash(html: string): Promise<string> {
+    const entries = parserLog(html).slice(0, 20)
+    const d100Rolls = parseD100Rolls(html).slice(0, 20)
+    const meaningful = JSON.stringify({ entries, d100Rolls })
+    const data = new TextEncoder().encode(meaningful)
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data)
+    const hashArray = Array.from(new Uint8Array(hashBuffer))
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('')
+  }
+
+  const handleUpload = async (file: File) => {
+    setUploadError(null)
+    try {
+      const content = await readFileAsText(file)
+      const contentHash = await computeHash(content)
+      const scenario = file.name.replace(/\.html$/, '')
+      await postLog({ password, scenario, content, contentHash })
+      setLogs(await fetchLogs())
+    } catch (e) {
+      setUploadError((e instanceof Error ? e.message : '不明なエラーが発生しました'))
+    }
+  }
+
   return (
     <div>
       {view.type === 'list' && (
@@ -72,6 +98,24 @@ export default function Dashboard({ theme }: Props) {
             </div>
           ))}
           <button onClick={() => setView({ type: 'character' })}>キャラ別統計を見る</button>
+
+          <div>
+            <input
+              type="password"
+              placeholder="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <input
+              type="file"
+              accept=".html"
+              onChange={(e) => {
+                const file = e.target.files?.[0]
+                if (file) handleUpload(file)
+              }}
+            />
+            {uploadError && <p>{uploadError}</p>}
+          </div>
         </>
       )}
 

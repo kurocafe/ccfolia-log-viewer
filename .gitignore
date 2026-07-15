@@ -25,3 +25,6 @@ dist-ssr
 *.sw?
 .vercel
 .env*
+
+# 個人の実プレイログ（cc.html/ccb.html/x5.html/x10.html等の汎用サンプル以外）
+docs/*\[main\].html
