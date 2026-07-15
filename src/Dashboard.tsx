@@ -50,6 +50,15 @@ export default function Dashboard({ theme }: Props) {
     }
   }, [view, grouped])
 
+  const characterData = useMemo(() => {
+    if (view.type !== 'character')
+      return { entries: [], d100Rolls: [] }
+    return {
+      entries: logs.flatMap(l => parserLog(l.content)),
+      d100Rolls: logs.flatMap(l => parseD100Rolls(l.content)),
+    }
+  }, [view, logs])
+
   return (
     <div>
       {view.type === 'list' && (
@@ -62,6 +71,7 @@ export default function Dashboard({ theme }: Props) {
               {scenario}: {scenarioLogs.map(l => l.run).join(', ')}陣
             </div>
           ))}
+          <button onClick={() => setView({ type: 'character' })}>キャラ別統計を見る</button>
         </>
       )}
 
@@ -70,6 +80,14 @@ export default function Dashboard({ theme }: Props) {
           <button onClick={() => setView({ type: 'list' })}>Back</button>
           <p>{view.name} ({view.run === 'all' ? '全陣' : `${view.run}陣`}) </p>
           <LogAnalysisView entries={scenarioData.entries} d100Rolls={scenarioData.d100Rolls} theme={theme} />
+        </div>
+      )}
+
+      {view.type === 'character' && (
+        <div>
+          <button onClick={() => setView({ type: 'list' })}>Back</button>
+          <p>キャラ別統計</p>
+          <LogAnalysisView entries={characterData.entries} d100Rolls={characterData.d100Rolls} theme={theme} />
         </div>
       )}
     </div>
