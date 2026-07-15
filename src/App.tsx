@@ -1,16 +1,20 @@
 import { useState } from "react"
 import { parserLog, parseD100Rolls } from "./parser"
 import type { DiceRollEntry, D100Roll } from "./types"
-import { useTheme } from "./useTheme"
+import type { Theme } from "./useTheme"
 import { COPY } from "./themeCopy"
 import LogAnalysisView from "./components/LogAnalysisView"
 
-export default function App() {
+interface Props {
+  theme: Theme
+  toggle: () => void
+}
+
+export default function App({ theme, toggle }: Props) {
   const [entries, setEntries] = useState<DiceRollEntry[]>([])
   const [d100Rolls, setD100Rolls] = useState<D100Roll[]>([])
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [isDragging, setIsDragging] = useState(false)
-  const { theme, toggle } = useTheme()
   const copy = COPY[theme]
 
 
