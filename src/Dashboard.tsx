@@ -97,7 +97,7 @@ export default function Dashboard({ theme }: Props) {
     try {
       const content = await readFileAsText(selectedFile)
       const contentHash = await computeHash(content)
-      const scenario = selectedFile.name
+      const scenario = selectedFile.name.normalize('NFC')
         .replace(/\.html$/, '')
         .replace(/\s*\[[^\]]*\]$/, '')
       await postLog({ password, scenario, content, contentHash })
