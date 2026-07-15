@@ -7,10 +7,9 @@ import LogAnalysisView from "./components/LogAnalysisView"
 
 interface Props {
   theme: Theme
-  toggle: () => void
 }
 
-export default function App({ theme, toggle }: Props) {
+export default function App({ theme }: Props) {
   const [entries, setEntries] = useState<DiceRollEntry[]>([])
   const [d100Rolls, setD100Rolls] = useState<D100Roll[]>([])
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -91,15 +90,6 @@ export default function App({ theme, toggle }: Props) {
   return (
     <div className="min-h-screen px-6 py-10 text-[var(--text)] font-[family-name:var(--font-body)]">
       <div className="w-full">
-        <div className="flex justify-end mb-2">
-          <button
-            onClick={toggle}
-            className="rounded-full border bg-[var(--btn-bg)] text-[var(--btn-text)] border-[var(--btn-border)] hover:bg-[var(--btn-bg-hover)] hover:border-[var(--btn-border-hover)] shadow-[var(--btn-shadow)] transition-all duration-300 w-14 h-9 flex items-center justify-center text-base"
-          >
-            {copy.toggleLabel}
-          </button>
-        </div>
-
         <header className="text-center mb-10">
           <div className="text-[var(--accent)] text-sm mb-2 font-[family-name:var(--font-accent)] tracking-[0.3em]">
             {copy.eyebrow}
