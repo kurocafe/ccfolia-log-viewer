@@ -15,6 +15,20 @@ interface ThemeCopy {
   countSuffix: string
   growthTitle: string
   toggleLabel: string
+  navLocal: string
+  navDashboard: string
+  dashboardEmpty: string
+  uploadTitle: string
+  uploadPasswordPlaceholder: string
+  uploadFileLabel: string
+  uploadSubmit: string
+  uploadInProgress: string
+  loadingLogs: string
+  scenarioListTitle: string
+  characterStatsButton: string
+  characterStatsTitle: string
+  allRunsLabel: string
+  runSuffix: string
 }
 
 export const COPY: Record<Theme, ThemeCopy> = {
@@ -33,6 +47,20 @@ export const COPY: Record<Theme, ThemeCopy> = {
     countSuffix: "characters",
     growthTitle: "成長記録",
     toggleLabel: "🌸",
+    navLocal: "LOCAL",
+    navDashboard: "CHRONICLE",
+    dashboardEmpty: "まだ記録がありません",
+    uploadTitle: "記録を追加",
+    uploadPasswordPlaceholder: "合言葉",
+    uploadFileLabel: "⊕ ログファイルを選ぶ (.html)",
+    uploadSubmit: "アップロード実行",
+    uploadInProgress: "アップロード中…",
+    loadingLogs: "記録を読み込み中…",
+    scenarioListTitle: "シナリオ記録",
+    characterStatsButton: "✦ 探索者名鑑を見る",
+    characterStatsTitle: "探索者名鑑",
+    allRunsLabel: "全陣",
+    runSuffix: "陣",
   },
   soft: {
     eyebrow: "✿ ccfolia dice log ✿",
@@ -49,5 +77,19 @@ export const COPY: Record<Theme, ThemeCopy> = {
     countSuffix: "にん",
     growthTitle: "せいちょう記録",
     toggleLabel: "🌙",
+    navLocal: "てもと",
+    navDashboard: "みんなのログ",
+    dashboardEmpty: "まだログがないよ〜 さいしょの記録をおくってね",
+    uploadTitle: "ログをついかする",
+    uploadPasswordPlaceholder: "あいことば",
+    uploadFileLabel: "🎲 ログファイルをえらんでね",
+    uploadSubmit: "🎲 とうろくする",
+    uploadInProgress: "とうろくちゅう…",
+    loadingLogs: "なうろーでぃんぐ…",
+    scenarioListTitle: "シナリオ一覧",
+    characterStatsButton: "✨ みんなのとうけいを見る",
+    characterStatsTitle: "みんなのとうけい",
+    allRunsLabel: "ぜんぶ",
+    runSuffix: "じん",
   },
 }

@@ -37,3 +37,19 @@ export interface GrowthResult {
   reRoll?: number
   reRollIncrease?: number
 }
+
+export interface StoredLog {
+  id: string
+  scenario: string
+  run: number
+  content: string
+  contentHash: string
+  createdAt: string
+}
+
+export interface CreatedLog {
+  id: string
+  scenario: string
+  run: number
+  createdAt: string
+}
