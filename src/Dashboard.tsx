@@ -99,7 +99,7 @@ export default function Dashboard({ theme }: Props) {
       const contentHash = await computeHash(content)
       const scenario = selectedFile.name.normalize('NFC')
         .replace(/\.html$/, '')
-        .replace(/\s*\[[^\]]*\]$/, '')
+        .replace(/\s*((\([^)]*\))|(\[[^\]]*\]))$/, '')
       await postLog({ password, scenario, content, contentHash })
       setLogs(await fetchLogs())
       setSelectedFile(null)
@@ -114,7 +114,7 @@ export default function Dashboard({ theme }: Props) {
 
   return (
     <div className="min-h-screen px-6 py-10 text-[var(--text)] font-[family-name:var(--font-body)]">
-      <div className="w-full max-w-3xl mx-auto">
+      <div className="w-full max-w-3xl xl:max-w-5xl 2xl:max-w-6xl mx-auto">
         {/* パンくず */}
         <div className="flex items-center gap-2 mb-8 text-sm font-[family-name:var(--font-heading)]">
           <button
