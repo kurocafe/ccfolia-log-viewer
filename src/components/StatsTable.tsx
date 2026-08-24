@@ -7,6 +7,8 @@ interface Props {
   stats: CharacterStats[]
   selectedChar: string[]
   onToggle: (charName: string) => void
+  onSelectChar?: (charName: string) => void
+  showGrowthRoll?: boolean
   theme: Theme
 }
 
@@ -37,7 +39,7 @@ function RateBar({ value, color }: { value: number; color: string }) {
   )
 }
 
-export default function StatsTable({ stats, selectedChar, onToggle, theme }: Props) {
+export default function StatsTable({ stats, selectedChar, onToggle, onSelectChar, showGrowthRoll = true, theme }: Props) {
   const [sortKey, setSortKey] = useState<SortableKey | null>(null)
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('asc')
   const copy = COPY[theme]
@@ -123,16 +125,27 @@ export default function StatsTable({ stats, selectedChar, onToggle, theme }: Pro
               >
                 <td className="px-5 py-3 font-[family-name:var(--font-body)] text-[var(--text)] group-hover:text-[var(--accent)] transition-colors min-w-32 whitespace-nowrap">
                   <div className="flex items-center gap-3">
-                    <input
-                      type="checkbox"
-                      checked={selectedChar.includes(stat.charName)}
-                      onChange={() => onToggle(stat.charName)}
-                      className="w-3.5 h-3.5 accent-[var(--accent)] cursor-pointer"
-                    />
+                    {showGrowthRoll && (
+                      <input
+                        type="checkbox"
+                        checked={selectedChar.includes(stat.charName)}
+                        onChange={() => onToggle(stat.charName)}
+                        className="w-3.5 h-3.5 accent-[var(--accent)] cursor-pointer"
+                      />
+                    )}
                     <span className="text-[var(--text-index)] font-[family-name:var(--font-num)] text-xs">
                       {String(i + 1).padStart(2, "0")}
                     </span>
-                    {stat.charName || <span className="text-[var(--text-muted)] italic">unknown</span>}
+                    {onSelectChar ? (
+                      <button
+                        onClick={() => onSelectChar(stat.charName)}
+                        className="hover:text-[var(--accent)] hover:underline underline-offset-2 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] rounded"
+                      >
+                        {stat.charName || <span className="text-[var(--text-muted)] italic">unknown</span>}
+                      </button>
+                    ) : (
+                      stat.charName || <span className="text-[var(--text-muted)] italic">unknown</span>
+                    )}
                   </div>
                 </td>
                 <td className="px-3 py-3 text-center font-[family-name:var(--font-num)] text-[var(--text-num)]">

@@ -10,6 +10,8 @@ import GrowthRollTable from "./GrowthRollTable"
 interface Props {
   entries: DiceRollEntry[]
   d100Rolls: D100Roll[]
+  onSelectChar?: (charName: string) => void
+  showGrowthRoll?: boolean
   theme: Theme
 }
 
@@ -24,7 +26,7 @@ function calcNpcThreshold(stats: CharacterStats[]) {
   return upperMean * 0.3
 }
 
-export default function LogAnalysisView({ entries, d100Rolls, theme }: Props) {
+export default function LogAnalysisView({ entries, d100Rolls, onSelectChar, showGrowthRoll = true, theme }: Props) {
   const [growthResults, setGrowthResults] = useState<GrowthResult[]>([])
   const [selectedChar, setSelectedChar] = useState<string[]>([])
   const [hasRolled, setHasRolled] = useState(false)
@@ -81,25 +83,29 @@ export default function LogAnalysisView({ entries, d100Rolls, theme }: Props) {
         </label>
       </div>
 
-      <StatsTable stats={displayStats} selectedChar={selectedChar} onToggle={toggleChar} theme={theme} />
-      <div className="flex justify-center mt-6">
-        <div className="flex flex-col items-center gap-2">
-          <button
-            onClick={handleGrowthRoll}
-            disabled={selectedChar.length === 0 || hasRolled}
-            className="rounded-[var(--radius-btn)] border bg-[var(--btn-bg)] text-[var(--btn-text)] border-[var(--btn-border)] hover:bg-[var(--btn-bg-hover)] hover:border-[var(--btn-border-hover)] shadow-[var(--btn-shadow)] disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-300 px-10 py-3 font-[family-name:var(--font-heading)] text-base"
-          >
-            {copy.growthButton}
-          </button>
-          <p className="text-[var(--text-muted)] text-xs font-[family-name:var(--font-body)]">
-            {copy.growthNote}
-          </p>
-        </div>
-      </div>
-      {growthResults.length > 0 && (
-        <div className="mt-6">
-          <GrowthRollTable growthResults={growthResults} theme={theme} />
-        </div>
+      <StatsTable stats={displayStats} selectedChar={selectedChar} onToggle={toggleChar} onSelectChar={onSelectChar} theme={theme} showGrowthRoll={showGrowthRoll} />
+      {showGrowthRoll && (
+        <>
+          <div className="flex justify-center mt-6">
+            <div className="flex flex-col items-center gap-2">
+              <button
+                onClick={handleGrowthRoll}
+                disabled={selectedChar.length === 0 || hasRolled}
+                className="rounded-[var(--radius-btn)] border bg-[var(--btn-bg)] text-[var(--btn-text)] border-[var(--btn-border)] hover:bg-[var(--btn-bg-hover)] hover:border-[var(--btn-border-hover)] shadow-[var(--btn-shadow)] disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-300 px-10 py-3 font-[family-name:var(--font-heading)] text-base"
+              >
+                {copy.growthButton}
+              </button>
+              <p className="text-[var(--text-muted)] text-xs font-[family-name:var(--font-body)]">
+                {copy.growthNote}
+              </p>
+            </div>
+          </div>
+          {growthResults.length > 0 && (
+            <div className="mt-6">
+              <GrowthRollTable growthResults={growthResults} theme={theme} />
+            </div>
+          )}
+        </>
       )}
     </>
   )

@@ -6,11 +6,13 @@ import LogAnalysisView from "./components/LogAnalysisView"
 import type { Theme } from "./useTheme"
 import { COPY } from "./themeCopy"
 import { readFileAsText } from "./readFileAsText"
+import { scenariosForCharacter } from "./characterScenarios"
 
 type View =
   | { type: 'list' }
   | { type: 'scenario', name: string, run: number | 'all' }
   | { type: 'character' }
+  | { type: 'characterDetail', name: string }
 
 interface Props {
   theme: Theme
@@ -90,6 +92,12 @@ export default function Dashboard({ theme }: Props) {
     }
   }, [view, logs])
 
+  const characterDetailData = useMemo(() => {
+    if (view.type !== 'characterDetail')
+      return []
+    return scenariosForCharacter(view.name, logs)
+  }, [view, logs])
+
   const handleUpload = async () => {
     if (!selectedFile) return
     setUploadError(null)
@@ -135,6 +143,19 @@ export default function Dashboard({ theme }: Props) {
             <>
               <span className="text-[var(--text-faint)]">/</span>
               <span className="text-[var(--text-heading)]">{copy.characterStatsTitle}</span>
+            </>
+          )}
+          {view.type === 'characterDetail' && (
+            <>
+              <span className="text-[var(--text-faint)]">/</span>
+              <button
+                onClick={() => setView({ type: 'character' })}
+                className="text-[var(--accent)] hover:opacity-70 transition-opacity"
+              >
+                {copy.characterStatsTitle}
+              </button>
+              <span className="text-[var(--text-faint)]">/</span>
+              <span className="text-[var(--text-heading)]">{view.name}</span>
             </>
           )}
         </div>
@@ -287,7 +308,25 @@ export default function Dashboard({ theme }: Props) {
         )}
 
         {view.type === 'character' && (
-          <LogAnalysisView entries={characterData.entries} d100Rolls={characterData.d100Rolls} theme={theme} />
+          <LogAnalysisView
+            entries={characterData.entries}
+            d100Rolls={characterData.d100Rolls}
+            onSelectChar={(name) => setView({ type: 'characterDetail', name })}
+            theme={theme}
+          />
+        )}
+
+        {view.type === 'characterDetail' && (
+          <div className="flex flex-col gap-8">
+            {characterDetailData.map((data) => (
+              <div key={`${data.scenario}-${data.run}`}>
+                <h3 className="font-[family-name:var(--font-heading)] text-base text-[var(--text-heading)] mb-3">
+                  {data.scenario}（{data.run}{copy.runSuffix}）
+                </h3>
+                <LogAnalysisView entries={data.entries} d100Rolls={data.d100Rolls} showGrowthRoll={false} theme={theme} />
+              </div>
+            ))}
+          </div>
         )}
       </div>
     </div>
