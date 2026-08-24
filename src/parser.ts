@@ -25,6 +25,10 @@ function mapResultType(type: string): ResultType | null {
   }
 }
 
+function extractCharName(charName: string): string {
+  return charName.trim().replace(/\s+/g, ' ').replace(/(\s*[(（][^)）]*[)）])+$/g, '')
+}
+
 export function parserLog(html: string): DiceRollEntry[] {
   const parser = new DOMParser()
   const doc = parser.parseFromString(html, 'text/html')
@@ -35,7 +39,7 @@ export function parserLog(html: string): DiceRollEntry[] {
   for (const p of paragraphs) {
     const spans = p.querySelectorAll('span')
     if (spans.length < 3) continue
-    const charName = spans[1].textContent?.trim().replace(/\s+/g, ' ') ?? ''
+    const charName = extractCharName(spans[1].textContent?.trim() ?? '')
     const commandText = spans[2].textContent?.trim() ?? ''
     if (!/^(?:[xX]\d+\s+)?CCB?<=/.test(commandText)) {
       continue
@@ -85,7 +89,7 @@ export function parseD100Rolls(html: string): D100Roll[] {
   for (const p of paragraphs) {
     const spans = p.querySelectorAll('span')
     if (spans.length < 3) continue
-    const charName = spans[1].textContent?.trim().replace(/\s+/g, ' ') ?? ''
+    const charName = extractCharName(spans[1].textContent?.trim() ?? '')
     const commandText = spans[2].textContent?.trim() ?? ''
     // 技能値付き（CC/CCB や 1D100<=XX）は対象外。出目だけの 1d100 のみ拾う
     if (!commandText.startsWith('1D100') || commandText.includes('<=')) {
