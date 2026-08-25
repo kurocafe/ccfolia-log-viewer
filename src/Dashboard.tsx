@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react"
-import { fetchLogs, postLog } from "./api/client"
+import { fetchLogs, postLog, deleteLog } from "./api/client"
 import type { StoredLog } from "./types"
 import { parseD100Rolls, parserLog } from "./parser"
 import LogAnalysisView from "./components/LogAnalysisView"
@@ -49,7 +49,6 @@ export default function Dashboard({ theme }: Props) {
   const [logs, setLogs] = useState<StoredLog[]>([])
   const [view, setView] = useState<View>({ type: 'list' })
   const [password, setPassword] = useState('')
-  const [uploadError, setUploadError] = useState<string | null>(null)
   const [isUploading, setIsUploading] = useState(false)
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [fileInputKey, setFileInputKey] = useState(0)
@@ -100,7 +99,6 @@ export default function Dashboard({ theme }: Props) {
 
   const handleUpload = async () => {
     if (!selectedFile) return
-    setUploadError(null)
     setIsUploading(true)
     try {
       const content = await readFileAsText(selectedFile)
@@ -114,9 +112,25 @@ export default function Dashboard({ theme }: Props) {
       setFileInputKey((k) => k + 1)
       setPassword('')
     } catch (e) {
-      setUploadError(e instanceof Error ? e.message : '不明なエラーが発生しました')
+      window.alert(e instanceof Error ? e.message : 'アップロードに失敗しました')
     } finally {
       setIsUploading(false)
+    }
+  }
+
+  const handleDeleteLog = async (id: string) => {
+    if (view.type !== 'scenario') return
+    if (!window.confirm("本当に削除しますか？")) return
+
+    const password = window.prompt("パスワードを入力してください")
+    if (!password) return
+
+    try {
+      await deleteLog(id, password)
+      setLogs(await fetchLogs())
+      setView({ type: 'list' })
+    } catch (e) {
+      window.alert(e instanceof Error ? e.message : '削除に失敗しました')
     }
   }
 
@@ -209,10 +223,6 @@ export default function Dashboard({ theme }: Props) {
                     {isUploading ? copy.uploadInProgress : copy.uploadSubmit}
                   </button>
                 </div>
-
-                {uploadError && (
-                  <p className="text-[var(--c-error)] text-sm">{uploadError}</p>
-                )}
               </div>
             </div>
 
@@ -284,24 +294,37 @@ export default function Dashboard({ theme }: Props) {
 
         {view.type === 'scenario' && (
           <div className="flex flex-col gap-6">
-            <div className="flex flex-wrap gap-1.5">
-              <button
-                onClick={() => setView({ type: 'scenario', name: view.name, run: 'all' })}
-                aria-pressed={view.run === 'all'}
-                className={pillClass(view.run === 'all')}
-              >
-                {copy.allRunsLabel}
-              </button>
-              {[...(grouped.get(view.name) ?? [])].sort((a, b) => a.run - b.run).map((log) => (
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="flex flex-wrap gap-1.5">
                 <button
-                  key={log.id}
-                  onClick={() => setView({ type: 'scenario', name: view.name, run: log.run })}
-                  aria-pressed={view.run === log.run}
-                  className={pillClass(view.run === log.run)}
+                  onClick={() => setView({ type: 'scenario', name: view.name, run: 'all' })}
+                  aria-pressed={view.run === 'all'}
+                  className={pillClass(view.run === 'all')}
                 >
-                  {log.run}{copy.runSuffix}
+                  {copy.allRunsLabel}
                 </button>
-              ))}
+                {[...(grouped.get(view.name) ?? [])].sort((a, b) => a.run - b.run).map((log) => (
+                  <button
+                    key={log.id}
+                    onClick={() => setView({ type: 'scenario', name: view.name, run: log.run })}
+                    aria-pressed={view.run === log.run}
+                    className={pillClass(view.run === log.run)}
+                  >
+                    {log.run}{copy.runSuffix}
+                  </button>
+                ))}
+              </div>
+              {view.run !== 'all' && (
+                <button
+                  onClick={() => {
+                    const log = grouped.get(view.name)?.find(l => l.run === view.run)
+                    if (log) handleDeleteLog(log.id)
+                  }}
+                  className="text-xs text-[var(--c-error)] hover:opacity-70 transition-opacity font-[family-name:var(--font-body)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--c-error)] rounded"
+                >
+                  {copy.deleteLogButton}
+                </button>
+              )}
             </div>
             <LogAnalysisView entries={scenarioData.entries} d100Rolls={scenarioData.d100Rolls} theme={theme} />
           </div>
