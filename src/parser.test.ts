@@ -30,6 +30,13 @@ describe("parser（実ログ docs/cc.html）", () => {
       expect(["CC", "CCB"]).toContain(e.command)
     }
   })
+
+  test("parserLog はキャラ名末尾の(...)を除去する", () => {
+    const entries = parserLog(ccHtml)
+    const names = entries.map(e => e.charName)
+    expect(names).not.toContain("天道 未久美 (てんどう みくみ)")
+    expect(names).toContain("天道 未久美")
+  })
 })
 
 describe("parserLog (x5 複数判定)", () => {
@@ -42,4 +49,18 @@ describe("parserLog (x5 複数判定)", () => {
     const entries = parserLog(x10html)
     expect(entries).toHaveLength(95)
   })
-}) 
+})
+
+describe("parserLog (キャラ名の連続括弧除去)", () => {
+  test("parserLog はキャラ名末尾の連続した括弧もまとめて除去する", () => {
+    const html = `
+    <p>
+      <span>[main]</span>
+      <span>西園寺 楚夜歌 (さいおんじ そよか)(0)</span>
+      <span>CCB&lt;=60 【幸運】 (1D100&lt;=60) ＞ 99 ＞ 致命的失敗</span>
+    </p>
+  `
+    const entries = parserLog(html)
+    expect(entries[0].charName).toBe("西園寺 楚夜歌")
+  })
+})

@@ -34,7 +34,7 @@ const scenarioC = {
 
 describe("scenariosForCharacter", () => {
   test("あるキャラが2つのシナリオに登場するログを渡したら、2件のグループが返る", () => {
-    const log = scenariosForCharacter("天道 未久美 (てんどう みくみ)", [scenarioA, scenarioB, scenarioC])
+    const log = scenariosForCharacter("天道 未久美", [scenarioA, scenarioB, scenarioC])
     expect(log).toHaveLength(2)
   })
 })
