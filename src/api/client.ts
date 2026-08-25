@@ -42,6 +42,12 @@ export async function postLog(params: PostLogParams): Promise<CreatedLog> {
   })
 
   if (!res.ok) {
+    if (res.status === 409) {
+      throw new Error('このログは既にアップロード済みです')
+    }
+    if (res.status === 401) {
+      throw new Error('合言葉が違います')
+    }
     throw new Error(`Failed to post log: ${res.statusText}`)
   }
 
@@ -51,5 +57,22 @@ export async function postLog(params: PostLogParams): Promise<CreatedLog> {
     scenario: row.scenario,
     run: row.run,
     createdAt: row.created_at,
+  }
+}
+
+export async function deleteLog(id: string, password: string): Promise<void> {
+  const res = await fetch(`${API_BASE}/logs`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ id, password })
+  })
+
+  if (!res.ok) {
+    if (res.status === 401) {
+      throw new Error('合言葉が違います')
+    }
+    throw new Error(`Failed to delete log: ${res.statusText}`)
   }
 }

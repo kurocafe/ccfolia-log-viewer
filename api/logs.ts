@@ -48,5 +48,21 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return;
   }
 
+  if (req.method === 'DELETE') {
+    const { id, password } = req.body;
+    if (password !== process.env.PASSWORD) {
+      res.status(401).json({ error: "Unauthorized" });
+      return;
+    }
+    if (!id) {
+      res.status(400).json({ error: "Bad Request" });
+      return;
+    }
+
+    await sql`DELETE FROM logs WHERE id = ${id}`;
+    res.status(204).end();
+    return;
+  }
+
   res.status(405).json({ error: "Method Not Allowed" });
 }

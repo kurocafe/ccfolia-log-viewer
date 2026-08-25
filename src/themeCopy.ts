@@ -29,6 +29,7 @@ interface ThemeCopy {
   characterStatsTitle: string
   allRunsLabel: string
   runSuffix: string
+  deleteLogButton: string
 }
 
 export const COPY: Record<Theme, ThemeCopy> = {
@@ -61,6 +62,7 @@ export const COPY: Record<Theme, ThemeCopy> = {
     characterStatsTitle: "探索者名鑑",
     allRunsLabel: "全陣",
     runSuffix: "陣",
+    deleteLogButton: "この記録を消し去る",
   },
   soft: {
     eyebrow: "✿ ccfolia dice log ✿",
@@ -91,5 +93,6 @@ export const COPY: Record<Theme, ThemeCopy> = {
     characterStatsTitle: "みんなのとうけい",
     allRunsLabel: "ぜんぶ",
     runSuffix: "じん",
+    deleteLogButton: "🗑 このきろくをけす",
   },
 }
